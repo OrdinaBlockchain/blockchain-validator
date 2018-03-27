@@ -3,7 +3,7 @@ let smoke = require('smokesignal')
 'use strict';
 
 let node = smoke.createNode({
-    port: 8496,
+    port: 8495,
     address: smoke.localIp("127.0.0.1") // Tell it your subnet and it'll figure out the right IP for you
 })
 

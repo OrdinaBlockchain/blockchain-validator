@@ -10,7 +10,7 @@ function createNode(port) {
     node = smoke.createNode({
         port: port,
         address: smoke.localIp(ip),
-        seeds: [{ port: 8496, address: ip }]
+        seeds: [{ port: 8495, address: ip }]
     })
     if (node) { connected = true; }
 }
@@ -20,7 +20,9 @@ function setNodeBehaviour() {
         let message = { type: "new", "ip": ip, "port": port };
         node.broadcast.write(JSON.stringify(message));
     })
-    node.on('disconnect', function() {})
+    node.on('disconnect', function() {
+        console.log('FACK NO NODES');
+    })
 
     process.stdin.pipe(node.broadcast).on('data', function(chunk) {
         console.log(chunk.toString('utf8'));
