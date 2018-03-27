@@ -11,9 +11,8 @@ var node = smoke.createNode({
 
 node.on('connect', function() {
     // Hey, now we have at least one peer!
-
-    node.broadcast.write("i am here brotha's")
-        // ...and broadcast stuff -- this is an ordinary duplex stream!
+    var newpeer = node.peers.list[node.peers.list.length - 1];
+    node.broadcast.write("new validator connected with ip " + newpeer.socket.host + " and port " + newpeer.socket.port)
 })
 
 node.on('disconnect', function() {

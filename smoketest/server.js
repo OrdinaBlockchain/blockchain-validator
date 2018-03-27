@@ -2,12 +2,22 @@ var smoke = require('smokesignal')
 'use strict';
 
 var ip = "127.0.0.1";
-var node = smoke.createNode({
-    port: 8495,
-    address: smoke.localIp(ip) // Tell it your subnet and it'll figure out the right IP for you
-        ,
-    seeds: [{ port: 8496, address: ip }] // the address of a seed (a known node)
-})
+var initialport = 8495;
+var connected = false;
+var node;
+while (!connected) {
+    try {
+        node = smoke.createNode({
+            port: 8495,
+            address: smoke.localIp(ip) // Tell it your subnet and it'll figure out the right IP for you
+                ,
+            seeds: [{ port: initialport, address: ip }] // the address of a seed (a known node)
+        })
+        if (node) { connected = true; }
+    } catch (ex) {
+        initialport++;
+    }
+}
 
 // listen on network events...
 
