@@ -2,7 +2,8 @@
     "extends": ["eslint:recommended", "google"],
     "rules": {
         "no-console": "off",
-        "linebreak-style": 0
+        "linebreak-style": 0,
+        "max-len": 0
     },
     "env": {
         "node": true
