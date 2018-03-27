@@ -30,8 +30,6 @@ process.stdin.pipe(node.broadcast).on('data', function(chunk) {
     console.log("Current ip's are: " + peers[0].socket.host + ", port: " +
         peers[0].socket.port);
 
-    console.log(chunk.toString('utf8'));
-
 });
 //Start the darn thing
 node.start()
