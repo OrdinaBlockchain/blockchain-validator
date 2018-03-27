@@ -1,4 +1,7 @@
 {
     "extends": ["eslint:recommended", "google"],
-    "rules": { }
+    "rules": { },
+    "env": {
+        "node": true
+    }
 }
