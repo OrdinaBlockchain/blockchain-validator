@@ -1,5 +1,5 @@
 {
-  "name": "validator",
+  "name": "validator.js_concept",
   "version": "1.0.0",
   "description": "A PoS blockchain validator",
   "main": "validator.js",
