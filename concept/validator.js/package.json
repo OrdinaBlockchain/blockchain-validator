@@ -1,0 +1,19 @@
+{
+  "name": "validator.js_concept",
+  "version": "1.0.0",
+  "description": "A PoS blockchain validator",
+  "main": "validator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vidovitsch",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^5.0.1",
+    "smokesignal": "^0.2.2"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-google": "^0.9.1"
+  }
+}
