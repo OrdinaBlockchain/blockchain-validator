@@ -4,13 +4,14 @@ require('dotenv').config();
 const Receiver = require('./services/receiver.js');
 const Sender = require('./services/sender');
 const smoke = require('smokesignal');
+const randomName = require('node-random-name');
 
 const node = smoke.createNode({
     port: parseInt(process.env.PORT),
     address: smoke.localIp(process.env.HOST),
     minPeerNo: 0,
 });
-node.id = 'Ares';
+node.id = randomName();
 
 process.stdin.pipe(node.broadcast).pipe(process.stdout);
 

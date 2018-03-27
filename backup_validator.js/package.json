@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^5.0.1",
+    "node-random-name": "^1.0.1",
     "nodemon": "^1.17.2",
     "smokesignal": "^0.2.2"
   },
