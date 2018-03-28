@@ -1,4 +1,4 @@
-const Message = require('../models/registrationMessage');
+const RegistrationMessage = require('../models/registrationMessage');
 
 /**
  * Receives messages from the network the node is connected to
@@ -13,9 +13,9 @@ class Sender {
     }
 
     /** */
-    init() {
-        const message = new Message();
-        console.log(JSON.stringify(message));
+    registeToNetwork() {
+        const message = new RegistrationMessage();
+        this.node.broadcast.write(JSON.stringify(this.node));
     }
 }
 

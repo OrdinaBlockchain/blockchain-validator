@@ -12,6 +12,7 @@ class Receiver {
         this.node = node;
 
         this.initDefaultListeners();
+        this.initCustomListeners();
     }
 
     /**
@@ -19,6 +20,9 @@ class Receiver {
     */
     initDefaultListeners() {
         this.node.on('connect', () => {
+            if (process.env.IS_BACKUP !== 'true') {
+                this.sender.registeToNetwork();
+            }
             console.log('Welcome %s!\nYou just made your first connection with the frozen network! :)', this.node.id);
         });
 
@@ -37,7 +41,7 @@ class Receiver {
     */
     initCustomListeners() {
         process.stdin.pipe(this.node.broadcast).on('data', (chunk) => {
-            console.log(chunk);
+            console.log(chunk.toString('utf8'));
         });
     }
 }

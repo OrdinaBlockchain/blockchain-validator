@@ -17,7 +17,8 @@ prompt.get(['port', 'is_backup'], (err, result) => {
     process.env.PORT = result.port;
     process.env.IS_BACKUP = result.is_backup;
 
-    promptOtherData(result.is_backup);
+    // promptOtherData(result.is_backup);
+    setPresetData(result.is_backup);
 });
 
 /**
@@ -49,6 +50,24 @@ function promptOtherData(isBackup) {
     }
 }
 
+/**
+ *
+ * @param {string} isBackup
+ */
+function setPresetData(isBackup) {
+    if (isBackup === 'true') {
+        process.env.BACKUP_2_HOST = '127.0.0.1';
+        process.env.BACKUP_2_PORT = 9001;
+        configure();
+    } else {
+        process.env.BACKUP_1_HOST = '127.0.0.1';
+        process.env.BACKUP_1_PORT = 9000;
+        process.env.BACKUP_2_HOST = '127.0.0.1';
+        process.env.BACKUP_2_PORT = 9001;
+        configure();
+    }
+}
+
 /** */
 function configure() {
     const nodeManager = new NodeManager();
@@ -58,7 +77,7 @@ function configure() {
     process.stdin.pipe(node.broadcast).pipe(process.stdout);
 
     // Enable sending and receiving messages
-    new Receiver(new Sender(), node);
+    new Receiver(new Sender(node), node);
 
     node.start();
 

@@ -9,8 +9,7 @@ class RegistrationMessage extends Message {
      * @param {Node} node
      */
     constructor(node) {
-        super();
-        this.action = 'register';
+        super('register');
         this.node = node;
     }
 }

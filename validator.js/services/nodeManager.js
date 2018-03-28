@@ -4,9 +4,7 @@ const randomName = require('node-random-name');
 /** */
 class NodeManager {
     /** */
-    constructor() {
-
-    }
+    constructor() { }
 
     /**
      *
@@ -14,7 +12,7 @@ class NodeManager {
      */
     createNode() {
         let node;
-        if (process.env.IS_BACKUP == 'true') {
+        if (process.env.IS_BACKUP === 'true') {
             node = smoke.createNode({
                 port: parseInt(process.env.PORT),
                 address: smoke.localIp(process.env.HOST),

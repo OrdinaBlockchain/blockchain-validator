@@ -4,10 +4,14 @@ const uuid = require('uuid');
  * Default message
 */
 class Message {
-    /** */
-    constructor() {
+    /**
+     *
+     * @param {string} action
+     */
+    constructor(action) {
         this.id = uuid();
         this.timestamp = new Date;
+        this.action = action;
     }
 }
 
