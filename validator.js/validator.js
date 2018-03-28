@@ -2,29 +2,46 @@
 
 require('dotenv').config();
 
-let smoke = require('smokesignal');
+const Receiver = require('./services/receiver.js');
+const Sender = require('./services/sender');
+const NodeManager = require('./services/nodeManager.js');
+const prompt = require('prompt');
 
-const node = smoke.createNode({
-    port: parseInt(process.env.PORT),
-    address: smoke.localIp(process.env.HOST),
-    seeds: [
-        {port: parseInt(process.env.SEED1_PORT), address: process.env.SEED1_HOST},
-    ],
-    minPeerNo: 1,
-    maxPeerNo: 4,
+prompt.start();
+
+// For localhost testing purposes
+prompt.get(['port', 'is_backup'], (err, result) => {
+    if (err) {
+        return onErr(err);
+    }
+    process.env.PORT = result.port;
+    process.env.IS_BACKUP = result.is_backup;
+
+    configure();
 });
 
-process.stdin.pipe(node.broadcast).pipe(process.stdout);
+/** */
+function configure() {
+    const nodeManager = new NodeManager();
+    const node = nodeManager.createNode();
 
-node.on('connect', () => {
-    console.log('Welcome %s to the frozen network! :)', node.id);
-    console.log('You just made your first connection');
-});
+    // Enable message tranferring
+    process.stdin.pipe(node.broadcast).pipe(process.stdout);
 
-node.on('disconnect', () => {
-    console.log('Disconnected');
-  });
+    // Enable sending and receiving messages
+    new Receiver(new Sender(), node);
 
-node.start();
+    node.start();
 
-console.log('Validator active on %s:%s', process.env.HOST, process.env.PORT);
+    console.log('Validator active on %s:%s', process.env.HOST, process.env.PORT);
+}
+
+/**
+ *
+ * @param {*} err
+ * @return {*}
+ */
+function onErr(err) {
+    console.log(err);
+    return 1;
+  }

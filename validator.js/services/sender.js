@@ -10,7 +10,6 @@ class Sender {
      */
     constructor(node) {
         this.node = node;
-        this.init();
     }
 
     /** */
