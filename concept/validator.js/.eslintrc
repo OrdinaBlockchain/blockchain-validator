@@ -1,9 +1,7 @@
 {
     "extends": ["eslint:recommended", "google"],
-    "rules": {
-        "no-console": "off",
-        "linebreak-style": 0,
-        "max-len": 0
+    "rules": { 
+        "no-console": "off"
     },
     "env": {
         "node": true

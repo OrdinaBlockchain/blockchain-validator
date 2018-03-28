@@ -1,8 +1,8 @@
 {
-  "name": "validator.js_concept",
+  "name": "backup_validator",
   "version": "1.0.0",
-  "description": "A PoS blockchain validator",
-  "main": "validator.js",
+  "description": "",
+  "main": "backup_validator.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^5.0.1",
+    "node-random-name": "^1.0.1",
+    "nodemon": "^1.17.2",
     "smokesignal": "^0.2.2"
   },
   "devDependencies": {
