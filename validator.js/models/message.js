@@ -6,11 +6,14 @@ const uuid = require('uuid');
 class Message {
     /**
      *
-     * @param {string} action
+     * @param {*} action
+     * @param {*} host
+     * @param {*} port
      */
-    constructor(action) {
+    constructor(action, host, port) {
         this.id = uuid();
         this.timestamp = new Date;
+        this.source = host + ':' + port;
         this.action = action;
     }
 }

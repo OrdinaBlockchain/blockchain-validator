@@ -73,7 +73,7 @@ function configure() {
     const nodeManager = new NodeManager();
     const node = nodeManager.createNode();
 
-    // Enable message tranferring
+    // Enable incoming messages to log into terminal
     process.stdin.pipe(node.broadcast).pipe(process.stdout);
 
     // Enable sending and receiving messages

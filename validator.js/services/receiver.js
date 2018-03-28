@@ -41,7 +41,16 @@ class Receiver {
     */
     initCustomListeners() {
         process.stdin.pipe(this.node.broadcast).on('data', (chunk) => {
-            console.log(chunk.toString('utf8'));
+            const message = JSON.parse(chunk.toString('utf8'));
+            if (message.action === 'knockknock') {
+                // A new node has knocked on the doors of the frozen network.
+                // The backup-validator opens and introduces him to the other nodes.
+                this.sender.introduceNewNode(message.node_host, message.node_port);
+            } else if (message.action === 'nice_to_meet_you') {
+                // The new node has introduced himself.
+                // You like this node and add him to your connections.
+                this.node.addPeer(message.node_host, message.node_port);
+            }
         });
     }
 }
