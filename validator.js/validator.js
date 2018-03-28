@@ -17,8 +17,8 @@ prompt.get(['port', 'is_backup'], (err, result) => {
     process.env.PORT = result.port;
     process.env.IS_BACKUP = result.is_backup;
 
-    promptOtherData(result.is_backup);
-    // setPresetData(result.is_backup);
+    // promptOtherData(result.is_backup);
+    setPresetData(result.is_backup);
 });
 
 /**
@@ -74,7 +74,7 @@ function configure() {
     const node = nodeManager.createNode();
 
     // Enable incoming messages to log into terminal
-    process.stdin.pipe(node.broadcast).pipe(process.stdout);
+    // process.stdin.pipe(node.broadcast).pipe(process.stdout);
 
     // Enable sending and receiving messages
     new Receiver(new Sender(node), node);

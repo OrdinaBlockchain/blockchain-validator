@@ -21,7 +21,7 @@ class Receiver {
     initDefaultListeners() {
         this.node.on('connect', () => {
             if (process.env.IS_BACKUP !== 'true') {
-                this.sender.registeToNetwork();
+                this.sender.requestDefaultPeerList();
             }
             console.log('Welcome %s!\nYou just made your first connection with the frozen network! :)', this.node.id);
         });
@@ -42,14 +42,39 @@ class Receiver {
     initCustomListeners() {
         process.stdin.pipe(this.node.broadcast).on('data', (chunk) => {
             const message = JSON.parse(chunk.toString('utf8'));
-            if (message.action === 'knockknock') {
-                // A new node has knocked on the doors of the frozen network.
-                // The backup-validator opens and introduces him to the other nodes.
-                this.sender.introduceNewNode(message.node_host, message.node_port);
-            } else if (message.action === 'nice_to_meet_you') {
-                // The new node has introduced himself.
-                // You like this node and add him to your connections.
-                this.node.addPeer(message.node_host, message.node_port);
+            if (message.action === 'request_default_peerlist') {
+                if (process.env.IS_BACKUP === 'true') {
+                    console.log('%s: %s (%s:%s) requests default peerlist', message.timestamp, message.source.id, message.source.host, message.source.port);
+
+                    let peers = [];
+                    this.node.peers.list.forEach((peer) => {
+                        peers.push({
+                            host: peer.node.options.address,
+                            port: peer.node.options.port,
+                        });
+                    });
+                    this.sender.sendDefaultPeerList(peers, message.source.id);
+                }
+            } else if (message.action === 'retreived_default_peerlist') {
+                if (message.recipients.indexOf(this.node.id) !== -1) {
+                    console.log('%s: %s (%s:%s) has given a default peerlist', message.timestamp, message.source.id, message.source.host, message.source.port);
+
+                    message.body.peers.forEach((host, port) => {
+                        this.node.addPeer(host, port);
+                    });
+                    this.sender.introduceNodeToNetwork();
+                }
+            } else if (message.action === 'new_node') {
+                let exists = false;
+                this.node.peers.list.forEach((peer) => {
+                    if (peer.node.id === message.source.id) {
+                        exists = true;
+                    }
+                });
+                if (!exists) {
+                    this.node.addPeer(message.source.host, message.source.port);
+                console.log('%s: Added %s (%s:%s) to your peerlist', message.timestamp, message.source.id, message.source.host, message.source.port);
+                }
             }
         });
     }
