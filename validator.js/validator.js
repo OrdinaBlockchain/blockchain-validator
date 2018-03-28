@@ -17,8 +17,37 @@ prompt.get(['port', 'is_backup'], (err, result) => {
     process.env.PORT = result.port;
     process.env.IS_BACKUP = result.is_backup;
 
-    configure();
+    promptOtherData(result.is_backup);
 });
+
+/**
+ *
+ * @param {string} isBackup
+ */
+function promptOtherData(isBackup) {
+    if (isBackup === 'true') {
+        prompt.get(['other_backup_host', 'other_backup_port'], (err, result) => {
+            if (err) {
+                return onErr(err);
+            }
+            process.env.BACKUP_2_HOST = result.other_backup_host;
+            process.env.BACKUP_2_PORT = result.other_backup_port;
+            configure();
+        });
+    } else {
+        prompt.get(['first_backup_host', 'first_backup_port',
+        'second_backup_host', 'second_backup_port'], (err, result) => {
+            if (err) {
+                return onErr(err);
+            }
+            process.env.BACKUP_1_HOST = result.first_backup_host;
+            process.env.BACKUP_1_PORT = result.first_backup_port;
+            process.env.BACKUP_2_HOST = result.second_backup_host;
+            process.env.BACKUP_2_PORT = result.second_backup_port;
+            configure();
+        });
+    }
+}
 
 /** */
 function configure() {
