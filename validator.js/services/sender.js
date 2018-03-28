@@ -14,8 +14,8 @@ class Sender {
 
     /** */
     registeToNetwork() {
-        const message = new RegistrationMessage();
-        this.node.broadcast.write(JSON.stringify(this.node));
+        const message = new RegistrationMessage(this.node);
+        this.node.broadcast.write(JSON.stringify(message));
     }
 }
 

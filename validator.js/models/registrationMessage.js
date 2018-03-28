@@ -10,7 +10,9 @@ class RegistrationMessage extends Message {
      */
     constructor(node) {
         super('register');
-        this.node = node;
+        this.node_id = node.id;
+        this.node_host = node.options.address;
+        this.node_port = node.options.port;
     }
 }
 
