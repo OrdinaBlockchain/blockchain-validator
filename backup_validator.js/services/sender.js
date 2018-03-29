@@ -1,3 +1,5 @@
+const Message = require('../models/registrationMessage');
+
 /**
  * Receives messages from the network the node is connected to
  */
@@ -8,6 +10,13 @@ class Sender {
      */
     constructor(node) {
         this.node = node;
+        this.init();
+    }
+
+    /** */
+    init() {
+        const message = new Message();
+        console.log(JSON.stringify(message));
     }
 }
 

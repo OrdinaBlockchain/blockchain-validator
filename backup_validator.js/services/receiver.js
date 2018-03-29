@@ -3,7 +3,7 @@
  */
 class Receiver {
     /**
-     *  Node that receives messages
+     * Node that receives messages
      * @param {Sender} sender
      * @param {Node} node
      */
@@ -23,7 +23,7 @@ class Receiver {
         });
 
         this.node.on('disconnect', () => {
-          console.log('Disconnected');
+            console.log('You just lost all your connections with the frozen network! :(\nGoodbye %s!', this.node.id);
         });
 
         this.node.on('error', (e) => {
@@ -36,7 +36,9 @@ class Receiver {
      * Initialize custom listeners that listen to network messages
     */
     initCustomListeners() {
-        // todo
+        process.stdin.pipe(this.node.broadcast).on('data', (chunk) => {
+            console.log(chunk);
+        });
     }
 }
 

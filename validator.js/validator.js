@@ -2,29 +2,94 @@
 
 require('dotenv').config();
 
-let smoke = require('smokesignal');
+const Receiver = require('./services/receiver.js');
+const Sender = require('./services/sender');
+const NodeManager = require('./services/nodeManager.js');
+const prompt = require('prompt');
 
-const node = smoke.createNode({
-    port: parseInt(process.env.PORT),
-    address: smoke.localIp(process.env.HOST),
-    seeds: [
-        {port: parseInt(process.env.SEED1_PORT), address: process.env.SEED1_HOST},
-    ],
-    minPeerNo: 1,
-    maxPeerNo: 4,
+prompt.start();
+
+// For localhost testing purposes
+prompt.get(['port', 'is_backup'], (err, result) => {
+    if (err) {
+        return onErr(err);
+    }
+    process.env.PORT = result.port;
+    process.env.IS_BACKUP = result.is_backup;
+
+    // promptOtherData(result.is_backup);
+    setPresetData(result.is_backup);
 });
 
-process.stdin.pipe(node.broadcast).pipe(process.stdout);
+/**
+ *
+ * @param {string} isBackup
+ */
+function promptOtherData(isBackup) {
+    if (isBackup === 'true') {
+        prompt.get(['other_backup_host', 'other_backup_port'], (err, result) => {
+            if (err) {
+                return onErr(err);
+            }
+            process.env.BACKUP_2_HOST = result.other_backup_host;
+            process.env.BACKUP_2_PORT = result.other_backup_port;
+            configure();
+        });
+    } else {
+        prompt.get(['first_backup_host', 'first_backup_port',
+        'second_backup_host', 'second_backup_port'], (err, result) => {
+            if (err) {
+                return onErr(err);
+            }
+            process.env.BACKUP_1_HOST = result.first_backup_host;
+            process.env.BACKUP_1_PORT = result.first_backup_port;
+            process.env.BACKUP_2_HOST = result.second_backup_host;
+            process.env.BACKUP_2_PORT = result.second_backup_port;
+            configure();
+        });
+    }
+}
 
-node.on('connect', () => {
-    console.log('Welcome %s to the frozen network! :)', node.id);
-    console.log('You just made your first connection');
-});
+/**
+ *
+ * @param {string} isBackup
+ */
+function setPresetData(isBackup) {
+    if (isBackup === 'true') {
+        process.env.BACKUP_2_HOST = '127.0.0.1';
+        process.env.BACKUP_2_PORT = 9001;
+        configure();
+    } else {
+        process.env.BACKUP_1_HOST = '127.0.0.1';
+        process.env.BACKUP_1_PORT = 9000;
+        process.env.BACKUP_2_HOST = '127.0.0.1';
+        process.env.BACKUP_2_PORT = 9001;
+        configure();
+    }
+}
 
-node.on('disconnect', () => {
-    console.log('Disconnected');
-  });
+/** */
+function configure() {
+    const nodeManager = new NodeManager();
+    const node = nodeManager.createNode();
 
-node.start();
+    // Enable incoming messages to log into terminal
+    // process.stdin.pipe(node.broadcast).pipe(process.stdout);
 
-console.log('Validator active on %s:%s', process.env.HOST, process.env.PORT);
+    // Enable sending and receiving messages
+    new Receiver(new Sender(node), node);
+
+    node.start();
+
+    console.log('Validator active on %s:%s', process.env.HOST, process.env.PORT);
+}
+
+/**
+ *
+ * @param {*} err
+ * @return {*}
+ */
+function onErr(err) {
+    console.log(err);
+    return 1;
+  }
