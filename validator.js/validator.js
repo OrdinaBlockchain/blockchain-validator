@@ -17,8 +17,8 @@ prompt.get(['port', 'is_backup'], (err, result) => {
     process.env.PORT = result.port;
     process.env.IS_BACKUP = result.is_backup;
 
-    // promptOtherData(result.is_backup);
-    setPresetData(result.is_backup);
+    promptOtherData(result.is_backup);
+    // setPresetData(result.is_backup);
 });
 
 /**
