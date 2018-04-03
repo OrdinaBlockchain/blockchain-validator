@@ -19,6 +19,7 @@ function setNodeBehaviour() {
     node.on('connect', function() {
         let message = { type: "new", "ip": ip, "port": port };
         node.broadcast.write(JSON.stringify(message));
+
     })
     node.on('disconnect', function() {
         console.log('FACK NO NODES');
@@ -26,6 +27,7 @@ function setNodeBehaviour() {
 
     process.stdin.pipe(node.broadcast).on('data', function(chunk) {
         console.log(chunk.toString('utf8'));
+        console.log(node.peers.list);
     });
 }
 
