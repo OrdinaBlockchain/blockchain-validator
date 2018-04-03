@@ -71,9 +71,10 @@ class Receiver {
                         exists = true;
                     }
                 });
+                console.log(this.node.peers.list);
                 if (!exists) {
                     this.node.addPeer(message.source.host, message.source.port);
-                console.log('%s: Added %s (%s:%s) to your peerlist', message.timestamp, message.source.id, message.source.host, message.source.port);
+                    console.log('%s: Added %s (%s:%s) to your peerlist', message.timestamp, message.source.id, message.source.host, message.source.port);
                 }
             }
         });
