@@ -67,7 +67,7 @@ class Receiver {
             } else if (message.action === 'new_node') {
                 let exists = false;
                 this.node.peers.list.forEach((peer) => {
-                    if (peer.node.id === message.source.id) {
+                    if (peer.id === message.source.id) {
                         exists = true;
                     }
                 });
