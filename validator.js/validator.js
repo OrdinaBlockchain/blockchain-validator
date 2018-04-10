@@ -3,7 +3,7 @@
 require('dotenv').config();
 const url = require('url');
 const path = require('path');
-const electron = require('electron.js');
+const electron = require('electron');
 const {app, BrowserWindow, Menu, ipcMain} = electron;
 const Receiver = require('./services/receiver.js');
 const Sender = require('./services/sender');
@@ -160,9 +160,6 @@ function promptLocations(isBackup) {
 function configure() {
     const nodeManager = new NodeManager();
     const node = nodeManager.createNode();
-
-    // Enable incoming messages to log into terminal
-    // process.stdin.pipe(node.broadcast).pipe(process.stdout);
 
     // Enable sending and receiving messages
     new Receiver(new Sender(node), node);
