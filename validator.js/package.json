@@ -21,7 +21,6 @@
     "devDependencies": {
         "electron": "^1.8.4",
         "eslint": "^4.19.1",
-        "eslint-config-google": "^0.9.1",
-        "prompt": "^1.0.0"
+        "eslint-config-google": "^0.9.1"
     }
 }
