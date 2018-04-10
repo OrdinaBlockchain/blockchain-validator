@@ -1,11 +1,18 @@
 let Transaction = require('./transaction.js');
 let BlockHeader = require('./blockheader.js');
 let Block = require('./block.js');
+const Security = require('../logic/security');
 
 /**
  * Blockchain is a value object containing the list of all Blocks.
  */
 class Blockchain {
+
+    /**
+     * Constructor for Blockchain.
+     * @param coinbase
+     * @param version
+     */
     constructor(coinbase, version) {
         this.blocks = [];
         this.coinbase = coinbase;
@@ -88,6 +95,37 @@ class Blockchain {
         if (this.blocks.length > 0) {
             return this.blocks[this.blocks.length - 1];
         }
+    }
+
+    getBalanceOf(address) {
+        let currentBlock = null;
+        let balance = 0;
+        let currentTransaction = null;
+
+        for (let i = 0; i < this.blocks.length; i++) {
+            currentBlock = this.blocks[i];
+
+            // Check coinbase Transactions
+            if (currentBlock.header.coinbase === address) {
+                balance += currentBlock.BLOCK_REWARD;
+            }
+
+            for (let j = 0; j < currentBlock.transactions.length; j++) {
+                currentTransaction = currentBlock.transactions[j];
+
+                // Check incoming balance.
+                if (currentTransaction._receiveraddress === address) {
+                    balance += currentTransaction._amount;
+                }
+
+                // Check outgoing balance.
+                if (currentTransaction._senderpubkey === address) {
+                    balance -= currentTransaction._amount;
+                }
+            }
+        }
+
+        return balance;
     }
 }
 

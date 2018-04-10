@@ -1,5 +1,5 @@
-const sec = require('../logic/security');
-var Transaction = require("./transaction.js");
+const Security = require('../logic/security');
+const Transaction = require("./transaction.js");
 
 /**
  * Block header is a value object containing the basic information of a block
@@ -31,7 +31,7 @@ class Blockheader {
 
         let hash = '0';
         if (this.isValidHeaderData(blockData)) {
-            hash = sec.Hash(coinbase + parentHash + version + timeStamp + blockData);
+            hash = Security.hash(coinbase + parentHash + version + timeStamp + blockData);
         }
 
         return hash;
