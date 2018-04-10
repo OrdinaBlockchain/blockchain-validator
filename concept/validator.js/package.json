@@ -9,7 +9,11 @@
   "author": "Vidovitsch",
   "license": "ISC",
   "dependencies": {
+    "bip39": "^2.5.0",
     "dotenv": "^5.0.1",
+    "elliptic": "^6.4.0",
+    "js-nacl": "^1.2.2",
+    "nodemon": "^1.17.3",
     "smokesignal": "^0.2.2"
   },
   "devDependencies": {
