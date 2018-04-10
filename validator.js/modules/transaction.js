@@ -52,8 +52,17 @@ class Transaction {
         if (this.signed) {
             var dataBytes = Buffer.from(this._data, 'utf8');
             var verified = this.nacl.crypto_verify_detached(this._signature, dataBytes, signPk);
-            if (verified) { console.log("Succesfully verified signature!"); } else { console.log("Signature invalid!"); }
-        } else { console.log("An unsigned transaction can not be verified!") }
+            if (verified) {
+                console.log("Succesfully verified signature!");
+                return true;
+            } else {
+                console.log("Signature invalid!");
+                return false;
+            }
+        } else {
+            console.log("An unsigned transaction can not be verified!")
+            return false;
+        }
     };
 
     getTimeStamp() {
