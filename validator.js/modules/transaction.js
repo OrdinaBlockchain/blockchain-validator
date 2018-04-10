@@ -1,4 +1,4 @@
-let sec = require('./security');
+let sec = require('../logic/security');
 /**
  * Default message
  */
@@ -9,17 +9,18 @@ let verified = false;
  */
 class Transaction {
     /**
-     *
-     * @param {*} senderpubkey
-     * @param {*} data
+     * 
+     * @param {*} data 
      */
-    constructor(senderpubkey, data) {
-        this._senderpubkey = senderpubkey;
+    constructor(data) {
         this._data = data;
-        this._receiveraddress = data.receiver;
-        this._signature = data.signature;
+
+        this._senderpubkey = data.senderpubkey;
+        this._receiveraddress = data.receiveraddress
         this._amount = data.amount;
         this._timestamp = data.timestamp;
+
+        this._signature = data.signature;
     }
 
     /**
@@ -34,8 +35,9 @@ class Transaction {
      */
     verify() {
         if (!this.verified) {
-            if (sec.Verify(this._signature, this._senderpubkey) !== '') {
-                console.log('Succesfully verified signature!');
+
+            if (sec.VerifyDetached(data, this._signature, this._senderpubkey)) {
+                console.log("Succesfully verified signature!");
                 verified = true;
                 return true;
             } else {
