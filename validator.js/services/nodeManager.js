@@ -20,6 +20,7 @@ class NodeManager {
                     {port: parseInt(process.env.BACKUP_2_PORT), address: process.env.BACKUP_2_HOST},
                 ],
             });
+            node.id = 'backup/' + randomName();
         } else {
             node = smoke.createNode({
                 port: parseInt(process.env.PORT),
@@ -29,8 +30,8 @@ class NodeManager {
                     {port: parseInt(process.env.BACKUP_2_PORT), address: process.env.BACKUP_2_HOST},
                 ],
             });
+            node.id = randomName();
         }
-        node.id = randomName();
         return node;
     }
 }

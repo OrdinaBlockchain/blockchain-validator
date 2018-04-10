@@ -14,26 +14,22 @@ class Sender {
 
     /** */
     requestDefaultPeerList() {
-        const message = new Message(this.node, 'request_default_peerlist');
+        const message = new Message(this.node, 'request_peers', {
+            recipientId: this.node.id,
+        });
         this.node.broadcast.write(JSON.stringify(message));
     }
 
     /**
      *
-     * @param {*} peers
-     * @param {*} recipient
+     * @param {{}[]} peers
+     * @param {string} recipientId
      */
-    sendDefaultPeerList(peers, recipient) {
-        const message = new Message(this.node, 'retreived_default_peerlist', {
+    sendDefaultPeerList(peers, recipientId) {
+        const message = new Message(this.node, 'reply_peers', {
             peers: peers,
         });
-        message.addRecipient(recipient);
-        this.node.broadcast.write(JSON.stringify(message));
-    }
-
-    /** */
-    introduceNodeToNetwork() {
-        const message = new Message(this.node, 'new_node');
+        message.addRecipient(recipientId);
         this.node.broadcast.write(JSON.stringify(message));
     }
 }
