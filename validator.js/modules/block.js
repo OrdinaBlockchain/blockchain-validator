@@ -10,7 +10,9 @@ class Block {
     }
 
     /**
-     * Adds Transaction to list of block Transactions. Transaction should already be checked for validity by Blockchain class, since Block does not have access to all information.
+     * Adds Transaction to list of block Transactions.
+     * Transaction should already be checked for validity by Blockchain class,
+     * since Block does not have access to all information.
      * @param transaction
      */
     addTransaction(transaction) {
@@ -28,7 +30,8 @@ class Block {
     }
 
     /**
-     * Recalculates the blockHash with the current Array of Transactions, and compares it to the blockHash in the header.
+     * Recalculates the blockHash with the current Array of Transactions,
+     * and compares it to the blockHash in the header.
      * @return {boolean}
      */
     hasValidHeader() {
