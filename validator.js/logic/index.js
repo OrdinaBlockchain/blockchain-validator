@@ -1,6 +1,7 @@
 let readline = require('readline');
 let async = require('async');
 let sec = require('./security');
+let fs = require('fs');
 
 let rl = readline.createInterface({
     input: process.stdin,
@@ -12,6 +13,7 @@ var keypair;
 var message;
 var signature;
 var succes;
+var address;
 
 // rl.question('What do you think of Node.js? ', (answer) => {
 //     // TODO: Log the answer in a database
@@ -56,8 +58,22 @@ async.series([
     },
     (callback) => {
         rl.question('Generate Wallet Address', function(args) {
-            sec.GenerateAddress(public);
+            address = sec.GenerateAddress(public);
             callback();
+        });
+    },
+    (callback) =>{
+        rl.question('Write to file', function(args) {
+            var data = {
+                version: "1.0",
+                mnemonic: mnemonic,
+                privateKey: private,
+                publicKey: public,
+                address: address
+              }
+            var json = JSON.stringify(data);
+    
+            fs.writeFile('igloo.json', json, 'utf8', callback);
         });
     }
 ], () => {

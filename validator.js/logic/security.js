@@ -19,7 +19,7 @@ function Sign(message, privKey) {
 }
 
 function SignDetached(message, privKey) {
-    var signatureDetachedBin;
+    var signatureDetached;
     var signPrivKey = HexStringToByteArray(privKey);
 
     nacl_factory.instantiate(function (nacl) {
@@ -27,13 +27,13 @@ function SignDetached(message, privKey) {
         const msgBytes = MessageToBytes(message);
 
         //Sign message and package up into packet
-        signatureDetachedBin = nacl.crypto_sign_detached(msgBytes, signPrivKey);
+        var signatureDetachedBin = nacl.crypto_sign_detached(msgBytes, signPrivKey);
+        signatureDetached = nacl.to_hex(signatureDetachedBin);
 
-        Debug('Signature:           ' + nacl.to_hex(signatureDetachedBin));
+        Debug('Signature:           ' + signatureDetached);
     });
-    
 
-    return signatureDetachedBin;
+    return signatureDetached;
 }
 
 function MessageToBytes(message) {
@@ -57,9 +57,10 @@ function Verify(signatureBin, pubKey) {
     return message;
 }
 
-function VerifyDetached(message, signatureBin, pubKey) {
+function VerifyDetached(message, signature, pubKey) {
     var result;
     var signPubKey = HexStringToByteArray(pubKey);
+    var signatureBin = HexStringToByteArray(signature);
 
     nacl_factory.instantiate(function (nacl) {
         //Convert message to bytestring
@@ -134,13 +135,12 @@ function Debug(message) {
         console.log(message)
 }
 
-function Hash(hexString){
-    var messageBin = HexStringToByteArray(hexString);
+function Hash(toHash){
     var hash;
 
     nacl_factory.instantiate(function (nacl) {
         //Hash public key, take first 11 bytes
-        hash = nacl.to_hex(nacl.crypto_hash_sha256(messageBin));
+        hash = nacl.to_hex(nacl.crypto_hash_sha256(toHash));
     });
 
     return hash;
