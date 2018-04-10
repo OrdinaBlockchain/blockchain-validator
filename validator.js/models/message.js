@@ -6,11 +6,11 @@ const uuid = require('uuid');
 class Message {
     /**
      *
-     * @param {*} node
-     * @param {*} action
-     * @param {*} body
+     * @param {Node} node
+     * @param {string} action
+     * @param {{}} data
      */
-    constructor(node, action, body) {
+    constructor(node, action, data) {
         this.id = uuid();
         this.timestamp = new Date;
         this.source = {
@@ -19,7 +19,7 @@ class Message {
             port: node.options.port,
         };
         this.action = action;
-        this.body = body;
+        this.data = data;
         this.recipients = [];
     }
 
