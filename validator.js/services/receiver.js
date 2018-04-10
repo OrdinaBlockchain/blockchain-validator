@@ -54,6 +54,11 @@ class Receiver {
             } else if (message.context === 'new_transaction') {
                 console.log('%s has given you a new transaction', message.source.id);
                 const transaction = new Transaction(message.data.transactionData);
+                if (transaction.verify()) {
+                    console.log('Succesfully verified signature!');
+                } else {
+                    console.log('Signature invalid!');
+                }
             }
         });
     }
