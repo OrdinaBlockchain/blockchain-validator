@@ -17,7 +17,7 @@ class Security {
      * @param {*} privKey
      * @return {*}
      */
-    sign(message, privKey) {
+    static sign(message, privKey) {
         let signatureBin;
         let signPrivKey = this.hexStringToByteArray(privKey);
 
@@ -39,7 +39,7 @@ class Security {
      * @param {string} privKey
      * @return {string} signature
      */
-    signDetached(message, privKey) {
+    static signDetached(message, privKey) {
         let signatureDetached;
         let signPrivKey = this.hexStringToByteArray(privKey);
 
@@ -62,7 +62,7 @@ class Security {
      * @param {string} message
      * @return {*} buffer
      */
-    messageToBytes(message) {
+    static messageToBytes(message) {
         return Buffer.from(message, 'utf8');
     }
 
@@ -72,7 +72,7 @@ class Security {
      * @param {string} pubKey
      * @return {string} message
      */
-    verify(signatureBin, pubKey) {
+    static verify(signatureBin, pubKey) {
         let message = '';
         let signPubKey = this.hexStringToByteArray(pubKey);
 
@@ -91,12 +91,12 @@ class Security {
 
     /**
      *
-     * @param {*} message
-     * @param {*} signature
-     * @param {*} pubKey
+     * @param {string} message
+     * @param {string} signature
+     * @param {string} pubKey
      * @return {*} result
      */
-    verifyDetached(message, signature, pubKey) {
+    static verifyDetached(message, signature, pubKey) {
         let result;
         let signPubKey = this.hexStringToByteArray(pubKey);
         let signatureBin = this.hexStringToByteArray(signature);
@@ -116,7 +116,7 @@ class Security {
     /**
      * @return {string} mnemonicString
      */
-    generateMnemonic() {
+    static generateMnemonic() {
         let msg = bip39.generateMnemonic();
         this.debug(msg);
         return msg;
@@ -127,7 +127,7 @@ class Security {
      * @param {string} mnemonic
      * @return {*} keypair
      */
-    generateKeyPair(mnemonic) {
+    static generateKeyPair(mnemonic) {
         let pubKey;
         let privKey;
 
@@ -147,10 +147,10 @@ class Security {
 
     /**
      *
-     * @param {*} pubKey
-     * @return {*} address
+     * @param {string} pubKey
+     * @return {string} address
      */
-    generateAddress(pubKey) {
+    static generateAddress(pubKey) {
         let signPubKey = this.hexStringToByteArray(pubKey);
         let address;
 
@@ -168,12 +168,12 @@ class Security {
 
     /**
      *
-     * @param {*} hexString
+     * @param {string} hexString
      * @return {*} array
      */
-    hexStringToByteArray(hexString) {
+    static hexStringToByteArray(hexString) {
         if (!hexString) {
-            return new Uint8Array();
+            return new Uint8Array(); // eslint-disable-line no-undef
         }
 
         let a = [];
@@ -181,12 +181,12 @@ class Security {
             a.push(parseInt(hexString.substr(i, 2), 16));
         }
 
-        return new Uint8Array(a);
+        return new Uint8Array(a); // eslint-disable-line no-undef
     }
 
     /**
      *
-     * @param {*} message
+     * @param {string} message
      */
     debug(message) {
         if (verbose) {
@@ -196,10 +196,10 @@ class Security {
 
     /**
      *
-     * @param {*} toHash
+     * @param {string} toHash
      * @return {*} hash
      */
-    hash(toHash) {
+    static hash(toHash) {
         let hash;
 
         naclFactory.instantiate((nacl) => {
