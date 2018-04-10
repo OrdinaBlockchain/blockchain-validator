@@ -81,17 +81,10 @@ message += String.fromCharCode(parseInt(hexString.substr(i, 2), 16));
     return message;
 }
 
-/**
- *
- * @param {string} message
- * @param {string} signature
- * @param {string} pubKey
- * @return {bool} result
- */
-function verifyDetached(message, signature, pubKey) {
-    let result;
-    let signPubKey = hexStringToByteArray(pubKey);
-    let signatureBin = hexStringToByteArray(signature);
+function VerifyDetached(message, signature, pubKey) {
+    var result;
+    var signPubKey = HexStringToByteArray(pubKey);
+    var signatureBin = HexStringToByteArray(signature);
 
     naclFacotry.instantiate(function(nacl) {
         // Convert message to bytestring

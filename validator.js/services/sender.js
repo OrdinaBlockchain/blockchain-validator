@@ -41,7 +41,7 @@ class Sender {
      */
     async broadcastTransaction(transaction) {
         const message = new Message(this.node, 'new_transaction', {
-            transaction: transaction,
+            transactionData: transaction._data,
         });
         this.node.broadcast.write(JSON.stringify(message));
     }
