@@ -46,39 +46,48 @@ class Receiver {
     initCustomListeners() {
         process.stdin.pipe(this.node.broadcast).on('data', (chunk) => {
             const message = JSON.parse(chunk.toString('utf8'));
-            if (message.action === 'request_peers') {
-                if (process.env.IS_BACKUP === 'true') {
-                    console.log('%s requests peerlist', message.source.id);
-
-                    let peers = [];
-                    this.node.peers.list.forEach((peer) => {
-                        peers.push({
-                            host: peer.socket.host,
-                            port: peer.socket.port,
-                        });
-                    });
-                    this.sender.sendPeers(peers, message.source.id);
-                }
-            } else if (message.action === 'reply_peers') {
-                if (message.recipients.indexOf(this.node.id) !== -1) {
-                    console.log('%s has given a peerlist', message.source.id);
-                    console.log(message.data.peers);
-                    console.log('own list');
-                    let peers = [];
-                    this.node.peers.list.forEach((peer) => {
-                        console.log(peer);
-                        peers.push({
-                            host: peer.socket.host,
-                            port: peer.socket.port,
-                        });
-                    });
-                    this.peers = message.data.peers;
-                }
+            if (message.action === 'request_peers' && process.env.IS_BACKUP === 'true') {
+                console.log('%s requests peerlist', message.source.id);
+                this.onPeerRequest(message.data);
+            } else if (message.action === 'reply_peers' && message.recipients.indexOf(this.node.id) !== -1) {
+                console.log('%s has given a peerlist', message.source.id);
+                this.onPeerReply(message.data);
             }
         });
     }
 
-    onPeerRequest
+    /**
+     *
+     * @param {*} data
+     */
+    onPeerRequest(data) {
+        let peers = [];
+        this.node.peers.list.forEach((peer) => {
+            peers.push({
+                host: peer.socket.host,
+                port: peer.socket.port,
+            });
+        });
+        this.sender.sendPeers(peers, data.recipientId);
+    }
+
+    /**
+     *
+     * @param {*} data
+     */
+    onPeerReply(data) {
+        console.log(data.peers);
+        console.log('own list');
+        let peers = [];
+        this.node.peers.list.forEach((peer) => {
+            console.log(peer);
+            peers.push({
+                host: peer.socket.host,
+                port: peer.socket.port,
+            });
+        });
+        this.peers = data.peers;
+    }
 }
 
 module.exports = Receiver;
