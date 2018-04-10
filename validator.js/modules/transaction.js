@@ -15,6 +15,8 @@ class Transaction {
         this._receiveraddress = data.receiveraddress;
         this._amount = data.amount;
         this._timestamp = data.timestamp;
+
+        this._signature = data.signature;
     }
 
     /**
