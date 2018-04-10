@@ -1,4 +1,5 @@
 let sec = require('./security');
+
 /**
  * Default message
  */
@@ -9,13 +10,12 @@ class Transaction {
      * @param {*} senderpubkey 
      * @param {*} data 
      */
-    constructor(senderpubkey, data) {
-        this._senderpubkey = senderpubkey;
-        this._data = data;
-        this._receiveraddress = data.receiver
-        this._signature = data.signature;
-        this._amount = data.amount;
-        this._timestamp = data.timestamp;
+    constructor(transactionmodel) {
+        this._senderpubkey = transactionmodel.senderpubkey;
+        this._receiveraddress = transactionmodel.receiver
+        this._signature = transactionmodel.signature;
+        this._amount = transactionmodel.amount;
+        this._timestamp = transactionmodel.timestamp;
     }
 
     getTimeStamp() {
