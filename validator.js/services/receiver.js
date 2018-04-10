@@ -53,12 +53,7 @@ class Receiver {
                 this.onPeerReply(message.data);
             } else if (message.context === 'new_transaction') {
                 console.log('%s has given you a new transaction', message.source.id);
-                const transaction = new Transaction(message.data.transactionData);
-                if (transaction.verify()) {
-                    console.log('Succesfully verified signature!');
-                } else {
-                    console.log('Signature invalid!');
-                }
+                this.onNewTransaction(message.data);
             }
         });
     }
@@ -85,6 +80,19 @@ class Receiver {
     onPeerReply(data) {
         // To Do (optional)
         this.peers = data.peers;
+    }
+
+    /**
+     *
+     * @param {*} data
+     */
+    onNewTransaction(data) {
+        const transaction = new Transaction(data.transactionData);
+        if (transaction.verify()) {
+            console.log('Valid signature of transaction');
+        } else {
+            console.log('Invalid signature of transaction');
+        }
     }
 }
 
