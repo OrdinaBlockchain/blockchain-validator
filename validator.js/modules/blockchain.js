@@ -1,17 +1,16 @@
-var Transaction = require("./transaction.js");
-var BlockHeader = require("./blockheader.js");
-var Block = require("./block.js");
+let Transaction = require('./transaction.js');
+let BlockHeader = require('./blockheader.js');
+let Block = require('./block.js');
 
 /**
  * Blockchain is a value object containing the list of all Blocks.
  */
 class Blockchain {
-
     constructor(coinbase, version) {
         this.blocks = [];
         this.coinbase = coinbase;
         this.version = version;
-        this.currentBlock = new Block(coinbase, "0", version)
+        this.currentBlock = new Block(coinbase, '0', version);
     }
 
     /**
@@ -27,7 +26,7 @@ class Blockchain {
     /**
      * Returns whether or not a Transaction is valid.
      * @param transaction
-     * @returns {boolean}
+     * @return {boolean}
      */
     isValidTransaction(transaction) {
         // TODO check if transaction is valid.
@@ -49,7 +48,7 @@ class Blockchain {
     /**
      * Returns whether or not a Block is valid.
      * @param block
-     * @returns {boolean}
+     * @return {boolean}
      */
     isValidBlock(block) {
         // TODO check if block is valid. Check currentBlock.timeStamp > previousBlock.timestamp.
@@ -58,10 +57,10 @@ class Blockchain {
 
     /**
      * Returns whether or not the Blockchain is valid.
-     * @returns {boolean}
+     * @return {boolean}
      */
     isValid() {
-        let previousHash = "0"; // Set previousHash to "0" for first block.
+        let previousHash = '0'; // Set previousHash to "0" for first block.
         for (let i = 0; i < this.blocks.length; i++) {
             let currentBlock = this.blocks[i];
 
@@ -82,7 +81,7 @@ class Blockchain {
 
     /**
      * Returns latest Block
-     * @returns {Block}
+     * @return {Block}
      */
     getLatestBlock() {
         if (this.blocks.length > 0) {

@@ -89,9 +89,9 @@ class Receiver {
     onNewTransaction(data) {
         const transaction = new Transaction(data.transactionData);
         if (transaction.verify()) {
-            console.log('Valid signature of transaction');
+            console.log('Valid transaction signature');
         } else {
-            console.log('Invalid signature of transaction');
+            console.log('Invalid transactoin signature');
         }
     }
 }
