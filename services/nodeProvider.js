@@ -12,7 +12,6 @@ class NodeProvider {
      */
     createNode() {
         let node;
-        console.log(process.env.NODE_PORT);
         if (process.env.IS_BACKUP === 'true') {
             node = smoke.createNode({
                 port: parseInt(process.env.NODE_PORT),

@@ -1,38 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
-        <title>webSockets and Socket.IO</title>
+        <title>validator.js</title>
+        <link rel="stylesheet" type="text/css" href="css/main.css">
         <script type="text/javascript" src="/socket.io/socket.io.js"></script> 
     </head>
     <body>
-        <form id="node-data-form"> 
-            <h1>Node Data</h1> 
-            <ul id="node-data-elements"> 
-                <li> 
-                    <label>Validator port:</label> 
-                    <input type="text" id="node-data-port" autofocus> 
-                </li> 
-                <li> 
-                    <label>Is backup:</label> 
-                    <input type="checkbox" id="node-data-isbackup"> 
-                </li> 
-                <li> 
-                    <label>First backup port:</label> 
-                    <input type="text" id="node-data-backup1_port"> 
-                </li> 
-                <li> 
-                    <label>Second backup port</label> 
-                    <input type="text" id="node-data-backup2_port"> 
-                </li> 
-            </ul> 
-            <button type="submit">Initialize validator</button> 
-        </form> 
+        <h2>Initialize Node</h2>
+        <form id="init-node-form"> 
+            <p>
+                <label>Is Backup:</label>
+                <input type="checkbox" id="node-data-isbackup"> 
+            </p>
+            <p>
+                <label>Node Port:</label><br> 
+                <input type="text" id="node-data-port" autofocus> 
+            </p>
+            <p>
+                <label>1st Backup Port:</label><br> 
+                <input type="text" id="node-data-backup1_port"> 
+            </p>
+            <p>
+                <label>2nd Backup Port:</label><br> 
+                <input type="text" id="node-data-backup2_port"> 
+            </p>
+            <p class="submit"> 
+                <input id="init-node-submit", type="submit" value="Start Validator" /> 
+            </p>
+        </form>
+        <br>
+        <h2>Logger</h2>
  
         <script type="text/javascript">        
-            const socket = io.connect('/');
+            const socket = io.connect();
             socket.on('connect', () => {
-                console.log('connected to server');
-                const form = document.querySelector('#node-data-form');
+                const form = document.querySelector('#init-node-form');
                 form.addEventListener('submit', submitNodeData)
 
                 function submitNodeData(event) {
@@ -48,6 +50,12 @@
                         backup1_port: backup1_port, 
                         backup2_port: backup2_port, 
                     }));
+
+                    document.getElementById('init-node-submit').style.disply = 'none';
+                    document.getElementById('node-data-isbackup').disabled = true;
+                    document.getElementById('node-data-port').disabled = true;
+                    document.getElementById('node-data-backup1_port').disabled = true;
+                    document.getElementById('node-data-backup2_port').disabled = true;
                 }
             });
         </script>
