@@ -1,17 +1,14 @@
 let Transaction = require('./transaction.js');
-let BlockHeader = require('./blockheader.js');
 let Block = require('./block.js');
-const Security = require('../logic/security');
 
 /**
  * Blockchain is a value object containing the list of all Blocks.
  */
 class Blockchain {
-
     /**
      * Constructor for Blockchain.
-     * @param coinbase
-     * @param version
+     * @param {string} coinbase
+     * @param {string} version
      */
     constructor(coinbase, version) {
         this.blocks = [];
@@ -22,17 +19,17 @@ class Blockchain {
 
     /**
      * Adds Transaction to currentBlock if it is valid.
-     * @param transaction
+     * @param {Transaction} transaction
      */
     addTransaction(transaction) {
-        if (isValidTransaction(transaction)) {
+        if (this.isValidTransaction(transaction)) {
             this.currentBlock.addTransaction(transaction);
         }
     }
 
     /**
      * Returns whether or not a Transaction is valid.
-     * @param transaction
+     * @param {Transaction} transaction
      * @return {boolean}
      */
     isValidTransaction(transaction) {
@@ -44,7 +41,7 @@ class Blockchain {
 
     /**
      * Adds Block to the Array of Blocks if it is valid.
-     * @param block
+     * @param {Block} block
      */
     addBlock(block) {
         block.calculateBlockHash();
@@ -55,7 +52,7 @@ class Blockchain {
 
     /**
      * Returns whether or not a Block is valid.
-     * @param block
+     * @param {Block} block
      * @return {boolean}
      */
     isValidBlock(block) {
@@ -68,7 +65,7 @@ class Blockchain {
      * @return {boolean}
      */
     isValid() {
-        let parentHash = "0"; // Set parentHash to "0" for first block.
+        let parentHash = '0'; // Set parentHash to "0" for first block.
         for (let i = 0; i < this.blocks.length; i++) {
             let currentBlock = this.blocks[i];
 
@@ -97,6 +94,11 @@ class Blockchain {
         }
     }
 
+    /**
+     * Calculates and returns balance of an address.
+     * @param {string} address
+     * @return {number} balance
+     */
     getBalanceOf(address) {
         let currentBlock = null;
         let balance = 0;

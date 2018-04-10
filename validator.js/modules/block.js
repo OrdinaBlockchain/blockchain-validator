@@ -4,7 +4,6 @@ let BlockHeader = require('./blockheader.js');
  * Block is a value object containing the list of Transactions.
  */
 class Block {
-
     /**
      *
      * @param {*} coinbase
@@ -25,7 +24,7 @@ class Block {
      */
     addTransaction(transaction) {
         // Only add new Transactions if the block is not already finished.
-        if (this.header.blockHash === '0') {
+        if (this.header.blockHash === '0' || this.header.blockHash === undefined) {
             this.transactions.push(transaction);
         }
     }
