@@ -1,4 +1,4 @@
-let sec = require('../logic/security');
+let sec = require('./security');
 /**
  * Default message
  */
@@ -20,7 +20,8 @@ class Transaction {
         this._amount = data.amount;
         this._timestamp = data.timestamp;
 
-        this._signature = data.signature;
+        // Initial transaction is unverified
+        this.verified = false;
     }
 
     /**

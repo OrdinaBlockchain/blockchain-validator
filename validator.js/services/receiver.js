@@ -1,6 +1,4 @@
-/**
- * Receives messages from the network the node is connected to
- */
+const Transaction = require('../modules/transaction');
 
 /** */
 class Receiver {
@@ -55,6 +53,7 @@ class Receiver {
                 this.onPeerReply(message.data);
             } else if (message.context === 'new_transaction') {
                 console.log('%s has given you a new transaction', message.source.id);
+                const transaction = new Transaction(message.data.transactionData);
             }
         });
     }
