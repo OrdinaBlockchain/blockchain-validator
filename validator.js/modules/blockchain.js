@@ -33,10 +33,11 @@ class Blockchain {
      * @return {boolean}
      */
     isValidTransaction(transaction) {
-        // TODO check if transaction is valid.
-        let valid = transaction instanceof Transaction;
+        // TODO check if address is a correct address
+        let isTransaction = transaction instanceof Transaction;
+        let hasFunds = this.getBalanceOf(transaction._senderpubkey) >= transaction._amount;
 
-        return valid;
+        return isTransaction && hasFunds;
     }
 
     /**
