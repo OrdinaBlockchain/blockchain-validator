@@ -29,7 +29,7 @@ class Transaction {
     /**
      * @return {*}
      */
-    verify() {
+    verifySignature() {
         return security.verifyDetached(this._data, this._signature, this._senderpubkey);
     }
 }
