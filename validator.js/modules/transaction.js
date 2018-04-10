@@ -9,8 +9,6 @@ class Transaction {
      * @param {*} data
      */
     constructor(data) {
-        this._data = data;
-
         this._senderpubkey = data.senderpubkey;
         this._receiveraddress = data.receiveraddress;
         this._amount = data.amount;
