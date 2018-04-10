@@ -1,9 +1,4 @@
-let sec = require('./security');
-
-/**
- * Default message
- */
-let verified = false;
+const Security = require('../logic/security');
 
 const security = new Security();
 
@@ -15,11 +10,11 @@ class Transaction {
      *
      * @param {*} data
      */
-    constructor(senderpubkey, data) {
-        this._senderpubkey = senderpubkey;
+    constructor(data) {
         this._data = data;
-        this._receiveraddress = data.receiver;
-        this._signature = data.signature;
+
+        this._senderpubkey = data.senderpubkey;
+        this._receiveraddress = data.receiveraddress;
         this._amount = data.amount;
         this._timestamp = data.timestamp;
     }
@@ -34,7 +29,7 @@ class Transaction {
     /**
      * @return {*}
      */
-    verifySignature() {
+    verify() {
         return security.verifyDetached(this._data, this._signature, this._senderpubkey);
     }
 }

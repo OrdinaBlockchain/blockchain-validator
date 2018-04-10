@@ -4,7 +4,7 @@ require('dotenv').config();
 const url = require('url');
 const path = require('path');
 const electron = require('electron.js');
-const { app, BrowserWindow, Menu, ipcMain } = electron;
+const {app, BrowserWindow, Menu, ipcMain} = electron;
 const Receiver = require('./services/receiver.js');
 const Sender = require('./services/sender');
 const NodeManager = require('./services/nodeManager.js');
@@ -54,25 +54,25 @@ function createAddTransactionWindow() {
 ipcMain.on('transaction:add', function(e, transaction) {
     mainWindow.webContents.send('transaction:add', transaction);
     addTransactionWindow.close();
-})
+});
 
 // create menu template
 const walletMenuTemplate = [{
     label: 'Options',
     submenu: [
-        { label: 'Set public key' },
+        {label: 'Set public key'},
         {
             label: 'Add transaction',
             click() {
                 createAddTransactionWindow();
-            }
+            },
         },
-        { label: 'Clear public key' },
+        {label: 'Clear public key'},
         {
             label: 'Quit',
             click() {
                 app.quit();
-            }
+            },
         },
     ],
 }];
