@@ -10,21 +10,6 @@ class Blockheader {
      * @param {string} coinbase
      * @param {string} parentHash
      * @param {string} version
-     * @param {*} blockData
-     */
-    constructor(coinbase, parentHash, version, blockData) {
-        this.coinbase = coinbase;
-        this.parentHash = parentHash;
-        this.version = version;
-        this.timeStamp = Date();
-        this.blockHash = this.calculateBlockHash(blockData);
-    }
-
-    /**
-     *
-     * @param {string} coinbase
-     * @param {string} parentHash
-     * @param {string} version
      */
     constructor(coinbase, parentHash, version) {
         this.coinbase = coinbase;
