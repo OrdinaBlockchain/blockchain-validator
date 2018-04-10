@@ -24,15 +24,15 @@ class Block {
     /**
      * Sets the header's blockHash.
      */
-    setHeaderHash() {
-        this.header.calculateBlockHash(this.transactions);
+    calculateBlockHash() {
+        this.header.blockHash = this.header.calculateBlockHash(this.transactions);
     }
 
     /**
      * Recalculates the blockHash with the current Array of Transactions, and compares it to the blockHash in the header.
      * @returns {boolean}
      */
-    isValidHeader() {
+    hasValidHeader() {
         return this.header.calculateBlockHash(this.transactions) === this.header.blockHash;
     }
 }
