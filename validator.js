@@ -5,6 +5,7 @@ require('dotenv').config();
 const Receiver = require('./services/receiver.js');
 const Sender = require('./services/sender');
 const NodeProvider = require('./services/nodeProvider.js');
+const opn = require('opn');
 const express = require('express');
 const http = require('http');
 let io = require('socket.io');
@@ -20,7 +21,11 @@ app.get('/', (req, res) => {
 
 // Start listening with HTTP (picks random available port)
 const server = http.createServer(app).listen();
-console.log(server.address().port);
+
+// Open default browser after server creation
+opn('http://localhost:' + server.address().port, (err) => {
+    console.log(err);
+});
 
 // Start listening with WebSockets
 io = io.listen(server);
