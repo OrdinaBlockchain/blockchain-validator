@@ -51,7 +51,7 @@
         function submitForm(e) {
             e.preventDefault();
             const port = document.querySelector('#port').value;
-            const backup = document.querySelector('#backup').value;
+            const backup = document.querySelector('#backup').checked;
             const backupport1 = document.querySelector('#backupport1').value;
             const backupport2 = document.querySelector('#backupport2').value;
             const nodedata = {
