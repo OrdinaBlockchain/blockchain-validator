@@ -7,10 +7,10 @@ class Message {
     /**
      *
      * @param {Node} node
-     * @param {string} action
+     * @param {string} context
      * @param {{}} data
      */
-    constructor(node, action, data) {
+    constructor(node, context, data) {
         this.id = uuid();
         this.timestamp = new Date;
         this.source = {
@@ -18,7 +18,7 @@ class Message {
             host: node.options.address,
             port: node.options.port,
         };
-        this.action = action;
+        this.context = context;
         this.data = data;
         this.recipients = [];
     }

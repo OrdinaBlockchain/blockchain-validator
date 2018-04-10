@@ -47,25 +47,14 @@ class Receiver {
         process.stdin.pipe(this.node.broadcast).on('data', (chunk) => {
             const message = JSON.parse(chunk.toString('utf8'));
 
-            // Test //
-            console.log('own list');
-
-                let peers = [];
-                this.node.peers.list.forEach((peer) => {
-                    console.log('Conencted peer: ' + peer.id);
-                    peers.push({
-                        host: peer.socket.host,
-                        port: peer.socket.port,
-                    });
-                });
-            // Test //
-
-            if (message.action === 'request_peers' && process.env.IS_BACKUP === 'true') {
+            if (message.context === 'request_peers' && process.env.IS_BACKUP === 'true') {
                 console.log('%s requests peerlist', message.source.id);
                 this.onPeerRequest(message.data);
-            } else if (message.action === 'reply_peers' && message.recipients.indexOf(this.node.id) !== -1) {
+            } else if (message.context === 'reply_peers' && message.recipients.indexOf(this.node.id) !== -1) {
                 console.log('%s has given a peerlist', message.source.id);
                 this.onPeerReply(message.data);
+            } else if (message.context === 'new_transaction') {
+                console.log('%s has given you a new transaction', message.source.id);
             }
         });
     }
@@ -90,8 +79,7 @@ class Receiver {
      * @param {*} data
      */
     onPeerReply(data) {
-        console.log(data.peers);
-
+        // To Do (optional)
         this.peers = data.peers;
     }
 }
