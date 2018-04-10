@@ -1,0 +1,36 @@
+var BlockHeader = require("./blockheader.js");
+
+/**
+ * Block is a value object containing the list of Transactions.
+ */
+class Block {
+
+    constructor(coinbase, parentHash, version) {
+        this.transactions = [];
+        this.header = new BlockHeader(coinbase, parentHash, version);
+    }
+
+    /**
+     * Adds Transaction to list of block Transactions. Transaction should already be checked for validity by Blockchain class, since Block does not have access to all information.
+     * @param transaction
+     */
+    addTransaction(transaction) {
+        // Only add new Transactions if the block is not already finished.
+        if (this.header.blockHash === "0") {
+            this.transactions.push(transaction);
+        }
+    }
+
+    /**
+     * Sets the header's blockHash.
+     */
+    setHeaderHash() {
+        this.header.calculateBlockHash(this.transactions);
+    }
+
+    isValidHeader() {
+        return this.header.calculateBlockHash(this.transactions) === this.header.blockHash;
+    }
+}
+
+module.exports = Block;

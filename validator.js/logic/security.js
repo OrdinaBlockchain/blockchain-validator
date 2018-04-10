@@ -25,21 +25,21 @@ function Sign(message, privKey) {
 }
 
 function SignDetached(message, privKey) {
-    let signatureDetachedBin;
-    let signPrivKey = HexStringToByteArray(privKey);
+    var signatureDetached;
+    var signPrivKey = HexStringToByteArray(privKey);
 
     naclFacotry.instantiate(function(nacl) {
         // Convert message to bytestring
         const msgBytes = MessageToBytes(message);
 
-        // Sign message and package up into packet
-        signatureDetachedBin = nacl.crypto_sign_detached(msgBytes, signPrivKey);
+        //Sign message and package up into packet
+        var signatureDetachedBin = nacl.crypto_sign_detached(msgBytes, signPrivKey);
+        signatureDetached = nacl.to_hex(signatureDetachedBin);
 
-        Debug('Signature:           ' + nacl.to_hex(signatureDetachedBin));
+        Debug('Signature:           ' + signatureDetached);
     });
 
-
-    return signatureDetachedBin;
+    return signatureDetached;
 }
 
 function MessageToBytes(message) {
@@ -64,9 +64,10 @@ message += String.fromCharCode(parseInt(hexString.substr(i, 2), 16));
     return message;
 }
 
-function VerifyDetached(message, signatureBin, pubKey) {
-    let result;
-    let signPubKey = HexStringToByteArray(pubKey);
+function VerifyDetached(message, signature, pubKey) {
+    var result;
+    var signPubKey = HexStringToByteArray(pubKey);
+    var signatureBin = HexStringToByteArray(signature);
 
     naclFacotry.instantiate(function(nacl) {
         // Convert message to bytestring
@@ -140,13 +141,12 @@ console.log(message);
 }
 }
 
-function Hash(hexString) {
-    let messageBin = HexStringToByteArray(hexString);
-    let hash;
+function Hash(toHash){
+    var hash;
 
-    naclFacotry.instantiate(function(nacl) {
-        // Hash public key, take first 11 bytes
-        hash = nacl.to_hex(nacl.crypto_hash_sha256(messageBin));
+    nacl_factory.instantiate(function (nacl) {
+        //Hash public key, take first 11 bytes
+        hash = nacl.to_hex(nacl.crypto_hash_sha256(toHash));
     });
 
     return hash;
