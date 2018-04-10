@@ -28,6 +28,10 @@ class Block {
         this.header.calculateBlockHash(this.transactions);
     }
 
+    /**
+     * Recalculates the blockHash with the current Array of Transactions, and compares it to the blockHash in the header.
+     * @returns {boolean}
+     */
     isValidHeader() {
         return this.header.calculateBlockHash(this.transactions) === this.header.blockHash;
     }
