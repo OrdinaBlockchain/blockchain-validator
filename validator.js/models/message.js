@@ -2,8 +2,10 @@ const uuid = require('uuid');
 
 /**
  * Default message
-*/
+ */
+
 class Message {
+
     /**
      *
      * @param {*} node
