@@ -26,40 +26,40 @@ prompt.get(['port', 'is_backup'], (err, result) => {
  */
 function promptLocations(isBackup) {
     if (isBackup === 'true') {
-        prompt.get(['other_backup_host', 'other_backup_port'], (err, result) => {
-            if (err) {
-                return onErr(err);
-            }
-            if (process.env.TEST === 'true') {
-                process.env.BACKUP_2_HOST = '127.0.0.1';
-                process.env.BACKUP_2_PORT = 9001;
-            } else {
-                process.env.BACKUP_2_HOST = result.other_backup_host;
-            process.env.BACKUP_2_PORT = result.other_backup_port;
-            }
-            process.env.BACKUP_2_HOST = result.other_backup_host;
-            process.env.BACKUP_2_PORT = result.other_backup_port;
+        if (process.env.TEST === 'true') {
+            process.env.BACKUP_2_HOST = '127.0.0.1';
+            process.env.BACKUP_2_PORT = 9001;
             configure();
-        });
+        } else {
+            prompt.get(['other_backup_host', 'other_backup_port'], (err, result) => {
+                if (err) {
+                    return onErr(err);
+                }
+                process.env.BACKUP_2_HOST = result.other_backup_host;
+                process.env.BACKUP_2_PORT = result.other_backup_port;
+                configure();
+            });
+        }
     } else {
-        prompt.get(['first_backup_host', 'first_backup_port',
-        'second_backup_host', 'second_backup_port'], (err, result) => {
-            if (err) {
-                return onErr(err);
-            }
-            if (process.env.TEST === 'true') {
-                process.env.BACKUP_1_HOST = '127.0.0.1';
-                process.env.BACKUP_1_PORT = 9000;
-                process.env.BACKUP_2_HOST = '127.0.0.1';
-                process.env.BACKUP_2_PORT = 9001;
-            } else {
+        if (process.env.TEST === 'true') {
+            process.env.BACKUP_1_HOST = '127.0.0.1';
+            process.env.BACKUP_1_PORT = 9000;
+            process.env.BACKUP_2_HOST = '127.0.0.1';
+            process.env.BACKUP_2_PORT = 9001;
+            configure();
+        } else {
+            prompt.get(['first_backup_host', 'first_backup_port',
+            'second_backup_host', 'second_backup_port'], (err, result) => {
+                if (err) {
+                    return onErr(err);
+                }
                 process.env.BACKUP_1_HOST = result.first_backup_host;
                 process.env.BACKUP_1_PORT = result.first_backup_port;
                 process.env.BACKUP_2_HOST = result.second_backup_host;
                 process.env.BACKUP_2_PORT = result.second_backup_port;
-            }
-            configure();
-        });
+                configure();
+            });
+        }
     }
 }
 
