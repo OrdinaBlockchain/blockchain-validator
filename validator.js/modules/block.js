@@ -19,7 +19,7 @@ class Block {
      * Adds Transaction to list of block Transactions.
      * Transaction should already be checked for validity by Blockchain class,
      * since Block does not have access to all information.
-     * @param transaction
+     * @param {*} transaction
      */
     addTransaction(transaction) {
         // Only add new Transactions if the block is not already finished.
