@@ -10,6 +10,8 @@ const express = require('express');
 const http = require('http');
 let io = require('socket.io');
 
+let sender;
+
 // Initialize app with Express
 const app = express();
 app.use(express.static(__dirname + '/public'));
@@ -35,7 +37,14 @@ io.on('connection', (socket) => {
         setEnvironmentVariables(JSON.parse(data.toString('utf8')));
         initNode();
     });
+    socket.on('broadcast-message', (data) => {
+        if (sender) {
+            // For testing purposes
+            sender.broadcastTransaction(data.toString('utf8').message);
+        }
+    });
 });
+
 
 /**
  *
@@ -59,7 +68,10 @@ function initNode() {
     const node = new NodeProvider().createNode();
 
     // Enable sending and receiving messages
-    new Receiver(new Sender(node), node);
+    sender = new Sender(node);
+    new Receiver(sender, node);
 
     node.start();
+
+    console.log('Validator listening on port %s', process.env.NODE_PORT);
 }

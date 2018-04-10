@@ -40,9 +40,13 @@ class Sender {
      * @param {*} transaction
      */
     async broadcastTransaction(transaction) {
+        // For testing purposes
         const message = new Message(this.node, 'new_transaction', {
-            transactionData: transaction._data,
+            transactionData: transaction,
         });
+        // const message = new Message(this.node, 'new_transaction', {
+        //     transactionData: transaction.data,
+        // });
         this.node.broadcast.write(JSON.stringify(message));
     }
 }

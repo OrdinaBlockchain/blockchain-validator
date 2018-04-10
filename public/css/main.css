@@ -32,3 +32,7 @@ label, h2 {
 #node-data-isbackup {
     width: 20px;
 }
+
+#broadcast-message-submit {
+    padding: 9px 15px;
+}

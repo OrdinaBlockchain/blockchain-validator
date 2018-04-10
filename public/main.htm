@@ -29,13 +29,27 @@
             </p>
         </form>
         <br>
-        <h2>Logger</h2>
+        <form id="message-broadcast-form">
+            <h2>Broadcast Message</h2>
+            <p>
+                <label>Message:</label><br>
+                <input type="text" id="message"> 
+            </p>
+            <p class="submit"> 
+                <input id="broadcast-message-submit", type="submit" value="Broadcast" /> 
+            </p>
+        </form>
  
-        <script type="text/javascript">        
+        <script type="text/javascript">  
+            document.getElementById('message-broadcast-form').style.display = 'none'
+
             const socket = io.connect();
             socket.on('connect', () => {
-                const form = document.querySelector('#init-node-form');
-                form.addEventListener('submit', submitNodeData)
+                const initNodeForm = document.querySelector('#init-node-form');
+                initNodeForm.addEventListener('submit', submitNodeData);
+
+                const broadcastMessageForm = document.querySelector('#message-broadcast-form');
+                broadcastMessageForm.addEventListener('submit', broadcastMessage);
 
                 function submitNodeData(event) {
                     event.preventDefault(); 
@@ -51,11 +65,19 @@
                         backup2_port: backup2_port, 
                     }));
 
-                    document.getElementById('init-node-submit').style.disply = 'none';
+                    document.getElementById('init-node-submit').style.display = 'none';
                     document.getElementById('node-data-isbackup').disabled = true;
                     document.getElementById('node-data-port').disabled = true;
                     document.getElementById('node-data-backup1_port').disabled = true;
                     document.getElementById('node-data-backup2_port').disabled = true;
+
+                    document.getElementById('message-broadcast-form').style.display = 'initial'
+                }
+
+                function broadcastMessage(event) {
+                    event.preventDefault();
+                    const message = document.querySelector('#message').value; 
+                    socket.emit('broadcast-message', JSON.stringify({message: message}));
                 }
             });
         </script>
