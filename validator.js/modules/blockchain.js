@@ -7,8 +7,24 @@ var Block = require("./block.js");
  */
 class Blockchain {
 
-    constructor() {
+    constructor(coinbase, version) {
         this.blocks = [];
+        this.coinbase = coinbase;
+        this.version = version;
+        this.currentBlock = new Block(coinbase, "0", version)
+    }
+
+    addTransaction(transaction) {
+        if (isValidTransaction(transaction)) {
+            this.currentBlock.addTransaction(transaction);
+        }
+    }
+
+    isValidTransaction(transaction) {
+        // TODO check if transaction is valid.
+        let valid = transaction instanceof Transaction;
+
+        return valid;
     }
 
     addBlock(block) {
@@ -17,7 +33,7 @@ class Blockchain {
         }
     }
 
-    static isValidBlock(block) {
+    isValidBlock(block) {
         // TODO check if block is valid. Check currentBlock.timeStamp > previousBlock.timestamp.
         return block instanceof Block;
     }
@@ -27,7 +43,7 @@ class Blockchain {
         for (let i = 0; i < this.blocks.length; i++) {
             let currentBlock = this.blocks[i];
 
-            // Chain is not valid if the currentBlock.previousHash !== hash of the previous block.
+            // Chain is not valid if the currentBlock.previousHash !== blockHash of the previous block.
             if (currentBlock.previousHash !== previousHash) {
                 return false;
             }
