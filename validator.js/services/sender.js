@@ -34,6 +34,17 @@ class Sender {
         message.addRecipient(recipientId);
         this.node.broadcast.write(JSON.stringify(message));
     }
+
+    /**
+     *
+     * @param {*} transaction
+     */
+    async broadcastTransaction(transaction) {
+        const message = new Message(this.node, 'new_transaction', {
+            transaction: transaction,
+        });
+        this.node.broadcast.write(JSON.stringify(message));
+    }
 }
 
 module.exports = Sender;
