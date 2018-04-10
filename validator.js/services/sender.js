@@ -1,4 +1,4 @@
-const Message = require('../models/message.js');
+const Message = require('../modules/message.js');
 
 /**
  * Receives messages from the network the node is connected to
