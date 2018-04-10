@@ -12,7 +12,9 @@ class Sender {
         this.node = node;
     }
 
-    /** */
+    /**
+     *
+     */
     async requestPeers() {
         const message = new Message(this.node, 'request_peers', {
             recipientId: this.node.id,
