@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>webSockets and Socket.IO</title>
+        <script type="text/javascript" src="/socket.io/socket.io.js"></script> 
+    </head>
+    <body>
+        <form id="node-data-form"> 
+            <h1>Node Data</h1> 
+            <ul id="node-data-elements"> 
+                <li> 
+                    <label>Validator port:</label> 
+                    <input type="text" id="node-data-port" autofocus> 
+                </li> 
+                <li> 
+                    <label>Is backup:</label> 
+                    <input type="checkbox" id="node-data-isbackup"> 
+                </li> 
+                <li> 
+                    <label>First backup port:</label> 
+                    <input type="text" id="node-data-backup1_port"> 
+                </li> 
+                <li> 
+                    <label>Second backup port</label> 
+                    <input type="text" id="node-data-backup2_port"> 
+                </li> 
+            </ul> 
+            <button type="submit">Initialize validator</button> 
+        </form> 
+ 
+        <script type="text/javascript">        
+            const socket = io.connect('/');
+            socket.on('connect', () => {
+                console.log('connected to server');
+                const form = document.querySelector('#node-data-form');
+                form.addEventListener('submit', submitNodeData)
+
+                function submitNodeData(event) {
+                    event.preventDefault(); 
+                    const port = document.querySelector('#node-data-port').value; 
+                    const isBackup = document.querySelector('#node-data-isbackup').checked; 
+                    const backup1_port = document.querySelector('#node-data-backup1_port').value; 
+                    const backup2_port = document.querySelector('#node-data-backup2_port').value; 
+ 
+                    socket.emit('node-data', JSON.stringify({ 
+                        port: port, 
+                        isBackup: isBackup, 
+                        backup1_port: backup1_port, 
+                        backup2_port: backup2_port, 
+                    }));
+                }
+            });
+        </script>
+    </body>
+</html>

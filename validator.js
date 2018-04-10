@@ -7,18 +7,45 @@ const Receiver = require('./services/receiver.js');
 const Sender = require('./services/sender');
 const NodeManager = require('./services/nodeManager.js');
 
-prompt.start();
+const express = require('express');
+const http = require('http');
+let io = require('socket.io');
+
+const app = express();
+app.use(express.static(__dirname + '/public'));
+app.get('/', (req, res) => {
+    res.redirect('/main.htm');
+});
+const server = http.createServer(app).listen(process.env.SERVER_PORT);
+
+io = io.listen(server);
+io.on('connection', (client) => {
+    console.log('connected to client');
+    client.on('node-data', (data) => {
+        data = JSON.parse(data.toString('utf8'));
+        console.log(data);
+        process.env.NODE_PORT = data.port;
+        process.env.IS_BACKUP = data.isBackup;
+        process.env.BACKUP_1_HOST = '127.0.0.1';
+        process.env.BACKUP_1_PORT = data.backup1_port;
+        process.env.BACKUP_2_HOST = '127.0.0.1';
+        process.env.BACKUP_2_PORT = data.backup2_port;
+
+        configure();
+    });
+});
 
 // For localhost testing purposes
-prompt.get(['port', 'is_backup'], (err, result) => {
-    if (err) {
-        return onErr(err);
-    }
-    process.env.PORT = result.port;
-    process.env.IS_BACKUP = result.is_backup;
+// prompt.get(['port', 'is_backup'], (err, result) => {
+//     if (err) {
+//         return onErr(err);
+//     }
+//     process.env.NODE_PORT = result.port;
+//     process.env.IS_BACKUP = result.is_backup;
 
-    promptLocations();
-});
+//     promptLocations();
+// });
+
 
 /**
  *
@@ -47,7 +74,7 @@ function configure() {
 
     node.start();
 
-    console.log('Validator active on 127.0.0.1:%s', process.env.PORT);
+    console.log('Validator active on 127.0.0.1:%s', process.env.NODE_PORT);
 }
 
 /**
