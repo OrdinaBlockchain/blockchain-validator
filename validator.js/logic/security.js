@@ -10,45 +10,62 @@ const verbose = true;
  */
 function Sign(message, privKey) {
     let signatureBin;
-    let signPrivKey = HexStringToByteArray(privKey);
+    let signPrivKey = hexStringToByteArray(privKey);
 
     naclFacotry.instantiate(function(nacl) {
         // Convert message to bytestring
-        const msgBytes = MessageToBytes(message);
+        const msgBytes = messageToBytes(message);
 
         // Sign message and package up into packet
         signatureBin = nacl.crypto_sign(msgBytes, signPrivKey);
-        Debug('Signature:           ' + nacl.to_hex(signatureBin));
+        debug('Signature:           ' + nacl.to_hex(signatureBin));
     });
 
     return signatureBin;
 }
 
-function SignDetached(message, privKey) {
+/**
+ *
+ * @param {string} message
+ * @param {string} privKey
+ * @return {string} signature
+ */
+function signDetached(message, privKey) {
     let signatureDetached;
-    let signPrivKey = HexStringToByteArray(privKey);
+    let signPrivKey = hexStringToByteArray(privKey);
 
     naclFacotry.instantiate(function(nacl) {
         // Convert message to bytestring
-        const msgBytes = MessageToBytes(message);
+        const msgBytes = messageToBytes(message);
 
         // Sign message and package up into packet
         let signatureDetachedBin = nacl.crypto_sign_detached(msgBytes, signPrivKey);
         signatureDetached = nacl.to_hex(signatureDetachedBin);
 
-        Debug('Signature:           ' + signatureDetached);
+        debug('Signature:           ' + signatureDetached);
     });
 
     return signatureDetached;
 }
 
-function MessageToBytes(message) {
+/**
+ *
+ * @param {string} message
+ * @return {*} buffer
+ */
+function messageToBytes(message) {
     return Buffer.from(message, 'utf8');
 }
 
-function Verify(signatureBin, pubKey) {
+/**
+ *
+ * @param {string} signatureBin
+ * @param {string} pubKey
+ * @return {string} message
+ */
+function verify(signatureBin, pubKey) {
     let message = '';
-    let signPubKey = HexStringToByteArray(pubKey);
+    let signPubKey = hexStringToByteArray(pubKey);
 
     naclFacotry.instantiate(function(nacl) {
         // Decode message from packet with public key
@@ -59,34 +76,42 @@ function Verify(signatureBin, pubKey) {
 message += String.fromCharCode(parseInt(hexString.substr(i, 2), 16));
 }
     });
-    // Debug('Text:              ' + message);
+    // debug('Text:              ' + message);
 
     return message;
 }
 
-function verifyDetached(message, signature, pubKey) {
-    let result;
-    let signPubKey = HexStringToByteArray(pubKey);
-    let signatureBin = HexStringToByteArray(signature);
+function VerifyDetached(message, signature, pubKey) {
+    var result;
+    var signPubKey = HexStringToByteArray(pubKey);
+    var signatureBin = HexStringToByteArray(signature);
 
     naclFacotry.instantiate(function(nacl) {
         // Convert message to bytestring
-        const msgBytes = MessageToBytes(message);
+        const msgBytes = messageToBytes(message);
 
         // Decode message from packet with public key
         result = nacl.crypto_sign_verify_detached(signatureBin, msgBytes, signPubKey);
     });
-    Debug('Result:              ' + result);
+    debug('Result:              ' + result);
 
     return result;
 }
 
-function GenerateMnemonic() {
+/**
+ * @return {string} mnemonicString
+ */
+function generateMnemonic() {
     let msg = bip39.generateMnemonic();
-    Debug(msg);
+    debug(msg);
     return msg;
 }
 
+/**
+ *
+ * @param {string} mnemonic
+ * @return {*} keypair
+ */
 function GenerateKeyPair(mnemonic) {
     let public;
     let private;
@@ -99,15 +124,15 @@ function GenerateKeyPair(mnemonic) {
         private = nacl.to_hex(signSk);
     });
 
-    Debug('Public Key:          ' + public);
-    Debug('Private Key:         ' + private);
+    debug('Public Key:          ' + public);
+    debug('Private Key:         ' + private);
 
 
     return {public, private};
 }
 
 function GenerateAddress(pubKey) {
-    let signPubKey = HexStringToByteArray(pubKey);
+    let signPubKey = hexStringToByteArray(pubKey);
     let address;
 
     naclFacotry.instantiate(function(nacl) {
@@ -118,11 +143,11 @@ function GenerateAddress(pubKey) {
         // Start with SNOW followed by the hex of the bytes
         address = 'SNOW' + nacl.to_hex(hash);
     });
-    Debug('Address:            ' + address);
+    debug('Address:            ' + address);
     return address;
 }
 
-function HexStringToByteArray(hexString) {
+function hexStringToByteArray(hexString) {
     if (!hexString) {
         return new Uint8Array();
       }
@@ -135,7 +160,7 @@ function HexStringToByteArray(hexString) {
       return new Uint8Array(a);
 }
 
-function Debug(message) {
+function debug(message) {
     if (verbose) {
 console.log(message);
 }
@@ -155,10 +180,10 @@ function Hash(toHash) {
 module.exports =
     {
         Sign: Sign,
-        Verify: Verify,
-        SignDetached: SignDetached,
-        VerifyDetached: VerifyDetached,
-        GenerateMnemonic: GenerateMnemonic,
+        verify: verify,
+        signDetached: signDetached,
+        verifyDetached: verifyDetached,
+        generateMnemonic: generateMnemonic,
         GenerateKeyPair: GenerateKeyPair,
         GenerateAddress: GenerateAddress,
         Hash: Hash,
