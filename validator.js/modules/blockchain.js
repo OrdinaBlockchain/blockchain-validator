@@ -14,12 +14,21 @@ class Blockchain {
         this.currentBlock = new Block(coinbase, "0", version)
     }
 
+    /**
+     * Adds Transaction to currentBlock if it is valid.
+     * @param transaction
+     */
     addTransaction(transaction) {
         if (isValidTransaction(transaction)) {
             this.currentBlock.addTransaction(transaction);
         }
     }
 
+    /**
+     * Returns whether or not a Transaction is valid.
+     * @param transaction
+     * @returns {boolean}
+     */
     isValidTransaction(transaction) {
         // TODO check if transaction is valid.
         let valid = transaction instanceof Transaction;
@@ -27,17 +36,30 @@ class Blockchain {
         return valid;
     }
 
+    /**
+     * Adds Block to the Array of Blocks if it is valid.
+     * @param block
+     */
     addBlock(block) {
-        if (Blockchain.isValidBlock(block)) {
+        if (this.isValidBlock(block)) {
             this.blocks.push(block);
         }
     }
 
+    /**
+     * Returns whether or not a Block is valid.
+     * @param block
+     * @returns {boolean}
+     */
     isValidBlock(block) {
         // TODO check if block is valid. Check currentBlock.timeStamp > previousBlock.timestamp.
         return block instanceof Block;
     }
 
+    /**
+     * Returns whether or not the Blockchain is valid.
+     * @returns {boolean}
+     */
     isValid() {
         let previousHash = "0"; // Set previousHash to "0" for first block.
         for (let i = 0; i < this.blocks.length; i++) {
@@ -50,12 +72,22 @@ class Blockchain {
             previousHash = currentBlock.hash;
 
             // Chain is not valid if >0 blocks are invalid.
-            if (!Blockchain.isValidBlock(currentBlock)) {
+            if (!this.isValidBlock(currentBlock)) {
                 return false;
             }
         }
 
         return true;
+    }
+
+    /**
+     * Returns latest Block
+     * @returns {Block}
+     */
+    getLatestBlock() {
+        if (this.blocks.length > 0) {
+            return this.blocks[this.blocks.length - 1];
+        }
     }
 }
 
