@@ -23,6 +23,9 @@ process.stdin.pipe(node.broadcast).on('data', function(chunk) {
     let message = JSON.parse(chunk.toString('utf8'));
     if (message.type === "new") {
         node.broadcast.write("new validator connected with ip " + message.ip + " and port " + message.port);
+        node.peers.list.forEach(element => {
+            console.log(element.id);
+        });
     }
     if (message.type === "transaction") {
         node.broadcast.write("new validator connected with ip " + message.ip + " and port " + message.port);
