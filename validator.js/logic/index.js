@@ -1,6 +1,7 @@
 const readline = require('readline');
 const async = require('async');
-const Security = require('./Security');
+
+const Security = require('../logic/security');
 const fs = require('fs');
 
 let rl = readline.createInterface({
@@ -31,7 +32,7 @@ async.series([
     },
     (callback) => {
         rl.question('Step 2: Generate Keypair with Mnemonic', function(args) {
-            keypair = {public: public, private: private} = Security.generateKeyPair(mnemonic); // eslint-disable-line no-undef
+            keypair = {pubKey: pubKey, privKey: privKey} = Security.generateKeyPair(mnemonic); // eslint-disable-line no-undef
             callback();
         });
     },
@@ -44,21 +45,21 @@ async.series([
 
     (callback) => {
         rl.question('Step 4: Sign message', function(args) {
-            signature = Security.sign(message, private); // eslint-disable-line no-undef
+            signature = Security.signDetached(message, privKey); // eslint-disable-line no-undef
             callback();
         });
     },
 
     (callback) => {
         rl.question('Step 5: Verify signature', function(args) {
-            succes = Security.verify(signature, public); // eslint-disable-line no-undef
+            succes = Security.verifyDetached(message,signature, pubKey); // eslint-disable-line no-undef
             console.log('Message from signature: ' + succes);
             callback();
         });
     },
     (callback) => {
         rl.question('Generate Wallet Address', function(args) {
-            address = Security.generateAddress(public); // eslint-disable-line no-undef
+            address = Security.generateAddress(pubKey); // eslint-disable-line no-undef
             callback();
         });
     },
@@ -67,8 +68,8 @@ async.series([
             let data = {
                 version: '1.0',
                 mnemonic: mnemonic,
-                privateKey: private, // eslint-disable-line no-undef
-                publicKey: public, // eslint-disable-line no-undef
+                privateKey: privKey, // eslint-disable-line no-undef
+                publicKey: pubKey, // eslint-disable-line no-undef
                 address: address,
               };
             let json = JSON.stringify(data);
