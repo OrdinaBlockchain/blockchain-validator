@@ -1,4 +1,5 @@
 const sec = require('../logic/security');
+var Transaction = require("./transaction.js");
 
 /**
  * Block header is a value object containing the basic information of a block
@@ -19,7 +20,7 @@ class Blockheader {
 
     /**
      * Calculates the blockHash of the block this header belongs to with the provided blockData
-     * @param {*} blockData
+     * @param {Transaction[]} blockData
      */
     calculateBlockHash(blockData) {
         // Create local variables to insert into nacl.
@@ -42,7 +43,7 @@ class Blockheader {
      * @return {boolean}
      */
     isValidHeaderData(blockData) {
-        return this.coinbase && this.parentHash && this.version && this.timeStamp && blockData;
+        return this.coinbase && this.parentHash && this.version && this.timeStamp && blockData instanceof Array;
     }
 }
 
