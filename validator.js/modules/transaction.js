@@ -1,4 +1,6 @@
-const security = require('./security');
+const Security = require('../logic/security');
+
+const security = new Security();
 
 /**
  *

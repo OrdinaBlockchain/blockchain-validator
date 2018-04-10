@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Ordina Blockchain</title>
+</head>
+
+<body>
+    <h1>
+        Configured Wallet
+    </h1>
+    <ul></ul>
+    <script>
+        const electron = require('electron');
+        const {
+            ipcRenderer
+        } = electron;
+        const ul = document.querySelector('ul')
+        ipcRenderer.on('transaction:add', function(e, transaction) {
+            const li = document.createElement('li');
+            const transactionText = document.createTextNode(transaction);
+            li.appendChild(transactionText);
+            ul.appendChild(li);
+        })
+    </script>
+</body>
+
+</html>

@@ -87,12 +87,13 @@ class Receiver {
      * @param {*} data
      */
     onNewTransaction(data) {
-        const transaction = new Transaction(data.transactionData);
-        if (transaction.verify()) {
-            console.log('Valid signature of transaction');
-        } else {
-            console.log('Invalid signature of transaction');
-        }
+        console.log(data);
+        // const transaction = new Transaction(data.transactionData);
+        // if (transaction.verifySignature()) {
+        //     console.log('Valid transaction signature');
+        // } else {
+        //     console.log('Invalid transactoin signature');
+        // }
     }
 }
 
