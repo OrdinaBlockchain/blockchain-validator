@@ -77,6 +77,8 @@ class Receiver {
             }
         });
     }
+
+    onPeerRequest
 }
 
 module.exports = Receiver;
