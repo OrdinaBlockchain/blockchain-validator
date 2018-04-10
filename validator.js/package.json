@@ -9,6 +9,7 @@
   "author": "Vidovitsch",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.6.0",
     "bip39": "^2.5.0",
     "dotenv": "^5.0.1",
     "js-nacl": "^1.2.2",

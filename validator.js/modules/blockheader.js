@@ -1,4 +1,4 @@
-const naclFactory = require('js-nacl');
+const sec = require('../logic/security');
 
 /**
  * Block header is a value object containing the basic information of a block
@@ -6,9 +6,9 @@ const naclFactory = require('js-nacl');
 class Blockheader {
     /**
      *
-     * @param {*} coinbase
-     * @param {*} parentHash
-     * @param {*} version
+     * @param {string} coinbase
+     * @param {string} parentHash
+     * @param {string} version
      * @param {*} blockData
      */
     constructor(coinbase, parentHash, version, blockData) {
@@ -24,14 +24,27 @@ class Blockheader {
      * @param {*} blockData
      */
     calculateBlockHash(blockData) {
+        // Create local variables to insert into nacl.
         let coinbase = this.coinbase;
         let parentHash = this.parentHash;
         let version = this.version;
         let timeStamp = this.timeStamp;
 
-        naclFactory.instantiate(function(nacl) {
-            console.log(nacl.to_hex(nacl.crypto_hash_sha256(coinbase + parentHash + version + timeStamp + blockData)));
-        });
+        let hash = "0"; 
+        if (this.isValidHeaderData(blockData)) {
+            hash = sec.Hash(coinbase + parentHash + version + timeStamp + blockData);
+        }
+
+        return hash;
+    }
+
+    /**
+     * Checks if the property data + provided blockData is valid to calculate the hash
+     * @param blockData
+     * @returns {boolean}
+     */
+    isValidHeaderData(blockData) {
+        return this.coinbase && this.parentHash && this.version && this.timeStamp && blockData;
     }
 }
 
