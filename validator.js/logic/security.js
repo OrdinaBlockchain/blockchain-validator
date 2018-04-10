@@ -134,6 +134,18 @@ function Debug(message) {
         console.log(message)
 }
 
+function Hash(hexString){
+    var messageBin = HexStringToByteArray(hexString);
+    var hash;
+
+    nacl_factory.instantiate(function (nacl) {
+        //Hash public key, take first 11 bytes
+        hash = nacl.to_hex(nacl.crypto_hash_sha256(messageBin));
+    });
+
+    return hash;
+}
+
 module.exports =
     {
         Sign: Sign,
@@ -142,5 +154,6 @@ module.exports =
         VerifyDetached: VerifyDetached,
         GenerateMnemonic: GenerateMnemonic,
         GenerateKeyPair: GenerateKeyPair,
-        GenerateAddress: GenerateAddress
+        GenerateAddress: GenerateAddress,
+        Hash: Hash,
     }
