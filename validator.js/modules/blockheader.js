@@ -4,6 +4,7 @@ const sec = require('../logic/security');
  * Block header is a value object containing the basic information of a block
  */
 class Blockheader {
+
     /**
      *
      * @param {string} coinbase
@@ -20,6 +21,19 @@ class Blockheader {
     }
 
     /**
+     *
+     * @param {string} coinbase
+     * @param {string} parentHash
+     * @param {string} version
+     */
+    constructor(coinbase, parentHash, version) {
+        this.coinbase = coinbase;
+        this.parentHash = parentHash;
+        this.version = version;
+        this.timeStamp = Date();
+    }
+
+    /**
      * Calculates the hash of the block this header belongs to with the provided blockData
      * @param {*} blockData
      */
@@ -30,7 +44,7 @@ class Blockheader {
         let version = this.version;
         let timeStamp = this.timeStamp;
 
-        let hash = "0"; 
+        let hash = "0";
         if (this.isValidHeaderData(blockData)) {
             hash = sec.Hash(coinbase + parentHash + version + timeStamp + blockData);
         }
