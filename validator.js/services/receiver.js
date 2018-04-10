@@ -46,6 +46,20 @@ class Receiver {
     initCustomListeners() {
         process.stdin.pipe(this.node.broadcast).on('data', (chunk) => {
             const message = JSON.parse(chunk.toString('utf8'));
+
+            // Test //
+            console.log('own list');
+
+                let peers = [];
+                this.node.peers.list.forEach((peer) => {
+                    console.log('Conencted peer: ' + peer.id);
+                    peers.push({
+                        host: peer.socket.host,
+                        port: peer.socket.port,
+                    });
+                });
+            // Test //
+
             if (message.action === 'request_peers' && process.env.IS_BACKUP === 'true') {
                 console.log('%s requests peerlist', message.source.id);
                 this.onPeerRequest(message.data);
@@ -77,15 +91,7 @@ class Receiver {
      */
     onPeerReply(data) {
         console.log(data.peers);
-        console.log('own list');
-        let peers = [];
-        this.node.peers.list.forEach((peer) => {
-            console.log(peer);
-            peers.push({
-                host: peer.socket.host,
-                port: peer.socket.port,
-            });
-        });
+
         this.peers = data.peers;
     }
 }

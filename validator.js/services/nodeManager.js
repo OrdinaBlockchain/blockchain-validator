@@ -19,6 +19,8 @@ class NodeManager {
                 seeds: [
                     {port: parseInt(process.env.BACKUP_2_PORT), address: process.env.BACKUP_2_HOST},
                 ],
+                minPeerNo: 1,
+                maxPeerNo: 9999999,
             });
             node.id = 'backup/' + randomName();
         } else {
@@ -29,6 +31,8 @@ class NodeManager {
                     {port: parseInt(process.env.BACKUP_1_PORT), address: process.env.BACKUP_1_HOST},
                     {port: parseInt(process.env.BACKUP_2_PORT), address: process.env.BACKUP_2_HOST},
                 ],
+                minPeerNo: 1,
+                maxPeerNo: 4,
             });
             node.id = randomName();
         }
