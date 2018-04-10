@@ -1,4 +1,9 @@
-const Security = require('../logic/security');
+let sec = require('./security');
+
+/**
+ * Default message
+ */
+let verified = false;
 
 const security = new Security();
 
@@ -10,11 +15,11 @@ class Transaction {
      *
      * @param {*} data
      */
-    constructor(data) {
+    constructor(senderpubkey, data) {
+        this._senderpubkey = senderpubkey;
         this._data = data;
-
-        this._senderpubkey = data.senderpubkey;
-        this._receiveraddress = data.receiveraddress;
+        this._receiveraddress = data.receiver;
+        this._signature = data.signature;
         this._amount = data.amount;
         this._timestamp = data.timestamp;
     }

@@ -1,26 +1,27 @@
 {
-  "name": "validator.js_concept",
-  "version": "1.0.0",
-  "description": "A PoS blockchain validator",
-  "main": "validator.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Vidovitsch",
-  "license": "ISC",
-  "dependencies": {
-    "async": "^2.6.0",
-    "bip39": "^2.5.0",
-    "dotenv": "^5.0.1",
-    "js-nacl": "^1.2.2",
-    "node-random-name": "^1.0.1",
-    "simple-peer": "^9.0.0",
-    "smokesignal": "^0.2.2",
-    "uuid": "^3.2.1"
-  },
-  "devDependencies": {
-    "eslint": "^4.19.1",
-    "eslint-config-google": "^0.9.1",
-    "prompt": "^1.0.0"
-  }
+    "name": "validator.js_concept",
+    "version": "1.0.0",
+    "description": "A PoS blockchain validator",
+    "main": "validator.js",
+    "scripts": {
+        "start": "electron ."
+    },
+    "author": "Vidovitsch",
+    "license": "ISC",
+    "dependencies": {
+        "async": "^2.6.0",
+        "bip39": "^2.5.0",
+        "dotenv": "^5.0.1",
+        "js-nacl": "^1.2.2",
+        "node-random-name": "^1.0.1",
+        "simple-peer": "^9.0.0",
+        "smokesignal": "^0.2.2",
+        "uuid": "^3.2.1"
+    },
+    "devDependencies": {
+        "electron": "^1.8.4",
+        "eslint": "^4.19.1",
+        "eslint-config-google": "^0.9.1",
+        "prompt": "^1.0.0"
+    }
 }
