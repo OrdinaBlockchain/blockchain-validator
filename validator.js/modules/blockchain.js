@@ -40,6 +40,7 @@ class Blockchain {
      * @param block
      */
     addBlock(block) {
+        block.calculateBlockHash();
         if (this.isValidBlock(block)) {
             this.blocks.push(block);
         }
@@ -52,7 +53,7 @@ class Blockchain {
      */
     isValidBlock(block) {
         // TODO check if block is valid. Check currentBlock.timeStamp > previousBlock.timestamp.
-        return block instanceof Block;
+        return block instanceof Block && block.hasValidHeader();
     }
 
     /**
@@ -60,15 +61,15 @@ class Blockchain {
      * @return {boolean}
      */
     isValid() {
-        let previousHash = '0'; // Set previousHash to "0" for first block.
+        let parentHash = "0"; // Set parentHash to "0" for first block.
         for (let i = 0; i < this.blocks.length; i++) {
             let currentBlock = this.blocks[i];
 
-            // Chain is not valid if the currentBlock.previousHash !== blockHash of the previous block.
-            if (currentBlock.previousHash !== previousHash) {
+            // Chain is not valid if the currentBlock.parentHash !== blockHash of the previous block.
+            if (currentBlock.header.parentHash !== parentHash) {
                 return false;
             }
-            previousHash = currentBlock.hash;
+            parentHash = currentBlock.header.blockHash;
 
             // Chain is not valid if >0 blocks are invalid.
             if (!this.isValidBlock(currentBlock)) {
