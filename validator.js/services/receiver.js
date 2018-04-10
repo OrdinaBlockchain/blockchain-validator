@@ -26,7 +26,7 @@ class Receiver {
 
         this.node.on('connect', () => {
             if (process.env.IS_BACKUP !== 'true') {
-                this.sender.requestDefaultPeerList();
+                this.sender.requestPeers();
             }
         });
 
@@ -57,7 +57,7 @@ class Receiver {
                             port: peer.socket.port,
                         });
                     });
-                    this.sender.sendDefaultPeerList(peers, message.source.id);
+                    this.sender.sendPeers(peers, message.source.id);
                 }
             } else if (message.action === 'reply_peers') {
                 if (message.recipients.indexOf(this.node.id) !== -1) {

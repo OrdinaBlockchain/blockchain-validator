@@ -13,7 +13,7 @@ class Sender {
     }
 
     /** */
-    requestDefaultPeerList() {
+    async requestPeers() {
         const message = new Message(this.node, 'request_peers', {
             recipientId: this.node.id,
         });
@@ -25,7 +25,7 @@ class Sender {
      * @param {{}[]} peers
      * @param {string} recipientId
      */
-    sendDefaultPeerList(peers, recipientId) {
+    async sendPeers(peers, recipientId) {
         const message = new Message(this.node, 'reply_peers', {
             peers: peers,
         });
