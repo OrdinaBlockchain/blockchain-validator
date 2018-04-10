@@ -15,7 +15,7 @@ class NodeManager {
         if (process.env.IS_BACKUP === 'true') {
             node = smoke.createNode({
                 port: parseInt(process.env.PORT),
-                address: smoke.localIp(process.env.HOST),
+                address: smoke.localIp('127.0.0.1'),
                 seeds: [
                     {port: parseInt(process.env.BACKUP_2_PORT), address: process.env.BACKUP_2_HOST},
                 ],
@@ -26,7 +26,7 @@ class NodeManager {
         } else {
             node = smoke.createNode({
                 port: parseInt(process.env.PORT),
-                address: smoke.localIp(process.env.HOST),
+                address: smoke.localIp('127.0.0.1'),
                 seeds: [
                     {port: parseInt(process.env.BACKUP_1_PORT), address: process.env.BACKUP_1_HOST},
                     {port: parseInt(process.env.BACKUP_2_PORT), address: process.env.BACKUP_2_HOST},
