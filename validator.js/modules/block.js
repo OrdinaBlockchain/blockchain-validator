@@ -1,10 +1,9 @@
-var BlockHeader = require("./blockheader.js");
+let BlockHeader = require('./blockheader.js');
 
 /**
  * Block is a value object containing the list of Transactions.
  */
 class Block {
-
     constructor(coinbase, parentHash, version) {
         this.transactions = [];
         this.header = new BlockHeader(coinbase, parentHash, version);
@@ -16,7 +15,7 @@ class Block {
      */
     addTransaction(transaction) {
         // Only add new Transactions if the block is not already finished.
-        if (this.header.blockHash === "0") {
+        if (this.header.blockHash === '0') {
             this.transactions.push(transaction);
         }
     }
@@ -28,6 +27,10 @@ class Block {
         this.header.calculateBlockHash(this.transactions);
     }
 
+    /**
+     * Recalculates the blockHash with the current Array of Transactions, and compares it to the blockHash in the header.
+     * @return {boolean}
+     */
     isValidHeader() {
         return this.header.calculateBlockHash(this.transactions) === this.header.blockHash;
     }
