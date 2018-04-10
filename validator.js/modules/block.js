@@ -4,6 +4,12 @@ let BlockHeader = require('./blockheader.js');
  * Block is a value object containing the list of Transactions.
  */
 class Block {
+    /**
+     *
+     * @param {*} coinbase
+     * @param {*} parentHash
+     * @param {*} version
+     */
     constructor(coinbase, parentHash, version) {
         this.transactions = [];
         this.header = new BlockHeader(coinbase, parentHash, version);
