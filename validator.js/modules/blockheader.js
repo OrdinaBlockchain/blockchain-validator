@@ -17,7 +17,7 @@ class Blockheader {
         this.parentHash = parentHash;
         this.version = version;
         this.timeStamp = Date();
-        this.hash = this.calculateBlockHash(blockData);
+        this.blockHash = this.calculateBlockHash(blockData);
     }
 
     /**
@@ -34,7 +34,7 @@ class Blockheader {
     }
 
     /**
-     * Calculates the hash of the block this header belongs to with the provided blockData
+     * Calculates the blockHash of the block this header belongs to with the provided blockData
      * @param {*} blockData
      */
     calculateBlockHash(blockData) {
@@ -53,7 +53,7 @@ class Blockheader {
     }
 
     /**
-     * Checks if the property data + provided blockData is valid to calculate the hash
+     * Checks if the property data + provided blockData is valid to calculate the blockHash
      * @param blockData
      * @returns {boolean}
      */
