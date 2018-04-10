@@ -2,7 +2,7 @@ const smoke = require('smokesignal');
 const randomName = require('node-random-name');
 
 /** */
-class NodeManager {
+class NodeProvider {
     /** */
     constructor() { }
 
@@ -41,4 +41,4 @@ class NodeManager {
     }
 }
 
-module.exports = NodeManager;
+module.exports = NodeProvider;
