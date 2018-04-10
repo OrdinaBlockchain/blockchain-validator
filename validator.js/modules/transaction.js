@@ -1,7 +1,5 @@
 const Security = require('../logic/security');
 
-const security = new Security();
-
 /**
  *
  */
@@ -30,7 +28,7 @@ class Transaction {
      * @return {*}
      */
     verify() {
-        return security.verifyDetached(this._data, this._signature, this._senderpubkey);
+        return Security.verifyDetached(this._data, this._signature, this._senderpubkey);
     }
 }
 

@@ -188,7 +188,7 @@ class Security {
      *
      * @param {string} message
      */
-    debug(message) {
+    static debug(message) {
         if (verbose) {
             console.log(message);
         }
