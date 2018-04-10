@@ -11,7 +11,7 @@ let rl = readline.createInterface({
 });
 
 let mnemonic;
-let keypair;
+let keypair; // eslint-disable-line no-unused-vars
 let message;
 let signature;
 let succes;
@@ -33,7 +33,7 @@ async.series([
     },
     (callback) => {
         rl.question('Step 2: Generate Keypair with Mnemonic', function(args) {
-            keypair = {public: public, private: private} = security.generateKeyPair(mnemonic);
+            keypair = {public: public, private: private} = security.generateKeyPair(mnemonic); // eslint-disable-line no-undef
             callback();
         });
     },
@@ -46,21 +46,21 @@ async.series([
 
     (callback) => {
         rl.question('Step 4: Sign message', function(args) {
-            signature = security.sign(message, private);
+            signature = security.sign(message, private); // eslint-disable-line no-undef
             callback();
         });
     },
 
     (callback) => {
         rl.question('Step 5: Verify signature', function(args) {
-            succes = security.verify(signature, public);
+            succes = security.verify(signature, public); // eslint-disable-line no-undef
             console.log('Message from signature: ' + succes);
             callback();
         });
     },
     (callback) => {
         rl.question('Generate Wallet Address', function(args) {
-            address = security.generateAddress(public);
+            address = security.generateAddress(public); // eslint-disable-line no-undef
             callback();
         });
     },
@@ -69,8 +69,8 @@ async.series([
             let data = {
                 version: '1.0',
                 mnemonic: mnemonic,
-                privateKey: private,
-                publicKey: public,
+                privateKey: private, // eslint-disable-line no-undef
+                publicKey: public, // eslint-disable-line no-undef
                 address: address,
               };
             let json = JSON.stringify(data);
