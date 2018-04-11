@@ -20,7 +20,7 @@ class Logger {
         + currentdate.getHours() + ':'
         + currentdate.getMinutes() + ':'
         + currentdate.getSeconds();
-        this.socket.emit('logging', '(' + datetime + ') ' + message);
+        this.socket.emit('logging', '(' + datetime + '): ' + message);
     }
 
     /**

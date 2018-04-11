@@ -62,6 +62,10 @@
                 
                 socket.on('disconnect', () => {
                     document.getElementById('server-status').innerText = 'Offline';
+                    document.getElementById('node-id').innerText = '-';
+                    document.getElementById('node-port').innerText = '-';
+                    document.getElementById('node-isbackup').innerText = '-';
+                    document.getElementById('node-status').innerText = '-';
                 });
 
                 socket.on('node-initialized', (data) => {
