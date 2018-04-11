@@ -22,10 +22,9 @@ class Receiver {
      * Initialize default listeners that listen to network messages
     */
     initDefaultListeners() {
-        console.log('Welcome %s!\nYou just made your first connection with the frozen network! :)', this.node.id);
-
         this.node.on('connect', () => {
             this.logger.notify('node-connected');
+            this.logger.log('Welcome ' + this.node.id + 'to the frozen network! :)');
             if (process.env.IS_BACKUP !== 'true') {
                 this.sender.requestPeers();
             }
@@ -33,7 +32,7 @@ class Receiver {
 
         this.node.on('disconnect', () => {
             this.logger.notify('node-disconnected');
-            console.log('You just lost all your connections with the frozen network! :(\nGoodbye %s!', this.node.id);
+            this.logger.log('Goodbye ' + this.node.id + ' :(');
         });
 
         this.node.on('error', (e) => {

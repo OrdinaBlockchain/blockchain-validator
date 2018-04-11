@@ -48,9 +48,14 @@
                 <input id="broadcast-message-submit", type="submit" value="Broadcast" /> 
             </p>
         </form>
+        <br>
+        <div id="logging-container">
+            <h2>Logging</h2>
+        </div>
  
         <script type="text/javascript">
             document.getElementById('message-broadcast-form').style.display = 'none'
+            document.getElementById('logging-container').style.display = 'none'
 
             const socket = io.connect();
             socket.on('connect', () => {
@@ -66,6 +71,10 @@
                     document.getElementById('node-isbackup').innerText = data.isBackup;
                     document.getElementById('node-status').innerText = 'Disconnected';
                 });
+
+                socket.on('logging', (data) => {
+                    document.getElementById('logging-container').innerHTML += data.toString('utf8') + '<br>';
+                })
 
                 socket.on('node-connected', (data) => {
                     document.getElementById('node-status').innerText = 'Connected';
@@ -97,6 +106,7 @@
                     // Change elements on webpage
                     document.getElementById('init-node-form').style.display = 'none';
                     document.getElementById('message-broadcast-form').style.display = 'initial'
+                    document.getElementById('logging-container').style.display = 'initial'
                 }
 
                 function broadcastMessage(event) {
