@@ -24,7 +24,7 @@ label, h2 {
     color: #FFFFFF;
 }
 
-.submit:hover > input {
+.submit > input:hover {
     cursor: pointer;
     background: #708AB0;
 }
