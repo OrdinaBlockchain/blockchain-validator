@@ -11,6 +11,7 @@ const http = require('http');
 let io = require('socket.io');
 
 let sender;
+let node;
 
 // Initialize app with Express
 const app = express();
@@ -36,6 +37,11 @@ io.on('connection', (socket) => {
     socket.on('node-data', (data) => {
         setEnvironmentVariables(JSON.parse(data.toString('utf8')));
         initNode();
+        socket.emit('node-initialized', JSON.stringify({
+                id: node.id,
+                port: process.env.NODE_PORT,
+                isBackup: process.env.IS_BACKUP}
+            ));
     });
     socket.on('broadcast-message', (data) => {
         if (sender) {
@@ -44,7 +50,6 @@ io.on('connection', (socket) => {
         }
     });
 });
-
 
 /**
  *
@@ -65,7 +70,7 @@ function setEnvironmentVariables(data) {
 
 /** */
 function initNode() {
-    const node = new NodeProvider().createNode();
+    node = new NodeProvider().createNode();
 
     // Enable sending and receiving messages
     sender = new Sender(node);

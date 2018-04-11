@@ -6,8 +6,18 @@
         <script type="text/javascript" src="/socket.io/socket.io.js"></script> 
     </head>
     <body>
-        <h2>Initialize Node</h2>
+        <div id="status-container">
+            <label>Server Status: </label><span id="server-status">Online</span>
+        </div>
+        <div id="validator-status-container">
+            <label>Node Id: </label><span id="node-id">-</span>
+            <label>Node Port: </label><span id="node-port">-</span>
+            <label>Is Backup: </label><span id="node-isbackup">-</span>
+            <label>Status: </label><span id="node-status">-</span>
+        </div>
+        <hr>
         <form id="init-node-form"> 
+            <h2>Initialize Node</h2>
             <p>
                 <label>Is Backup:</label>
                 <input type="checkbox" id="node-data-isbackup"> 
@@ -28,7 +38,6 @@
                 <input id="init-node-submit", type="submit" value="Start Validator" /> 
             </p>
         </form>
-        <br>
         <form id="message-broadcast-form">
             <h2>Broadcast Message</h2>
             <p>
@@ -40,14 +49,26 @@
             </p>
         </form>
  
-        <script type="text/javascript">  
+        <script type="text/javascript">
             document.getElementById('message-broadcast-form').style.display = 'none'
 
             const socket = io.connect();
             socket.on('connect', () => {
+                
+                socket.on('disconnect', () => {
+                    document.getElementById('server-status').innerText = 'Offline';
+                });
+
+                socket.on('node-initialized', (data) => {
+                    data = JSON.parse(data.toString('utf8'));
+                    document.getElementById('node-id').innerText = data.id;
+                    document.getElementById('node-port').innerText = data.port;
+                    document.getElementById('node-isbackup').innerText = data.isBackup;
+                });
+
+                document.getElementById('server-status').innerText = 'Online';
                 const initNodeForm = document.querySelector('#init-node-form');
                 initNodeForm.addEventListener('submit', submitNodeData);
-
                 const broadcastMessageForm = document.querySelector('#message-broadcast-form');
                 broadcastMessageForm.addEventListener('submit', broadcastMessage);
 
@@ -57,7 +78,6 @@
                     const isBackup = document.querySelector('#node-data-isbackup').checked; 
                     const backup1_port = document.querySelector('#node-data-backup1_port').value; 
                     const backup2_port = document.querySelector('#node-data-backup2_port').value; 
- 
                     socket.emit('node-data', JSON.stringify({ 
                         port: port, 
                         isBackup: isBackup, 
@@ -65,12 +85,8 @@
                         backup2_port: backup2_port, 
                     }));
 
-                    document.getElementById('init-node-submit').style.display = 'none';
-                    document.getElementById('node-data-isbackup').disabled = true;
-                    document.getElementById('node-data-port').disabled = true;
-                    document.getElementById('node-data-backup1_port').disabled = true;
-                    document.getElementById('node-data-backup2_port').disabled = true;
-
+                    // Change elements on webpage
+                    document.getElementById('init-node-form').style.display = 'none';
                     document.getElementById('message-broadcast-form').style.display = 'initial'
                 }
 

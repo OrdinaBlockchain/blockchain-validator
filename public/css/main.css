@@ -36,3 +36,12 @@ label, h2 {
 #broadcast-message-submit {
     padding: 9px 15px;
 }
+
+#status-container {
+    float: right;
+    padding: 10px;
+}
+
+#validator-status-container > label {
+    margin-left: 30px;
+}
