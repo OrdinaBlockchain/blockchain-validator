@@ -64,6 +64,15 @@
                     document.getElementById('node-id').innerText = data.id;
                     document.getElementById('node-port').innerText = data.port;
                     document.getElementById('node-isbackup').innerText = data.isBackup;
+                    document.getElementById('node-status').innerText = 'Disconnected';
+                });
+
+                socket.on('node-connected', (data) => {
+                    document.getElementById('node-status').innerText = 'Connected';
+                });
+
+                socket.on('node-disconnected', (data) => {
+                    document.getElementById('node-status').innerText = 'Disconnected';
                 });
 
                 document.getElementById('server-status').innerText = 'Online';

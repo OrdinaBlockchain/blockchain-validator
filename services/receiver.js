@@ -6,10 +6,12 @@ class Receiver {
      * Node that receives messages
      * @param {Sender} sender
      * @param {Node} node
+     * @param {Logger} logger
      */
-    constructor(sender, node) {
+    constructor(sender, node, logger) {
         this.sender = sender;
         this.node = node;
+        this.logger = logger;
         this.peers = [];
 
         this.initDefaultListeners();
@@ -23,12 +25,14 @@ class Receiver {
         console.log('Welcome %s!\nYou just made your first connection with the frozen network! :)', this.node.id);
 
         this.node.on('connect', () => {
+            this.logger.notify('node-connected');
             if (process.env.IS_BACKUP !== 'true') {
                 this.sender.requestPeers();
             }
         });
 
         this.node.on('disconnect', () => {
+            this.logger.notify('node-disconnected');
             console.log('You just lost all your connections with the frozen network! :(\nGoodbye %s!', this.node.id);
         });
 
