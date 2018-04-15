@@ -52,11 +52,10 @@ class Receiver {
                 this.messager.log(message.source.id + ' requests peerlist');
                 this.onPeerRequest(message.data);
             } else if (message.context === 'reply_peers' && message.recipients.indexOf(this.node.id) !== -1) {
-                this.messager.log( message.source.id + ' has given a peerlist');
+                this.messager.log(message.source.id + ' has given a peerlist');
                 this.onPeerReply(message.data);
             } else if (message.context === 'new_transaction') {
                 this.messager.log(message.source.id + ' has given you a new transaction');
-                this.messager.log(message.data.transactionData);
                 this.onNewTransaction(message.data);
             }
         });
@@ -91,13 +90,17 @@ class Receiver {
      * @param {*} data
      */
     onNewTransaction(data) {
-        console.log(data);
-        // const transaction = new Transaction(data.transactionData);
-        // if (transaction.verifySignature()) {
-        //     console.log('Valid transaction signature');
-        // } else {
-        //     console.log('Invalid transactoin signature');
-        // }
+        try {
+            const transaction = new Transaction(data.transactionData);
+            if (transaction.verifySignature()) {
+                this.messager.log('Valid transaction signature');
+            } else {
+                this.messager.log('Invalid transaction signature');
+            }
+        } catch (err) {
+            console.log(err);
+            this.messager.log(data.transactionData);
+        }
     }
 }
 

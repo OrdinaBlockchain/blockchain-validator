@@ -27,7 +27,7 @@ class Transaction {
     /**
      * @return {*}
      */
-    verify() {
+    verifySignature() {
         return Security.verifyDetached(this._data, this._signature, this._senderpubkey);
     }
 }

@@ -3,7 +3,7 @@
     <head>
         <title>validator.js</title>
         <link rel="stylesheet" type="text/css" href="css/main.css">
-        <script type="text/javascript" src="/socket.io/socket.io.js"></script> 
+        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     </head>
     <body>
         <div id="status-container">
@@ -16,50 +16,50 @@
             <label>Status: </label><span id="node-status">-</span>
         </div>
         <hr>
-        <form id="init-node-form"> 
+        <form id="init-node-form">
             <h2>Initialize Node</h2>
             <p>
                 <label>Is Backup:</label>
-                <input type="checkbox" id="node-data-isbackup"> 
+                <input type="checkbox" id="node-data-isbackup">
             </p>
             <p>
-                <label>Node Port:</label><br> 
-                <input type="text" id="node-data-port" autofocus> 
+                <label>Node Port:</label><br>
+                <input type="text" id="node-data-port" autofocus>
             </p>
             <p>
-                <label>1st Backup Port:</label><br> 
-                <input type="text" id="node-data-backup1_port"> 
+                <label>1st Backup Port:</label><br>
+                <input type="text" id="node-data-backup1_port">
             </p>
             <p>
-                <label>2nd Backup Port:</label><br> 
-                <input type="text" id="node-data-backup2_port"> 
+                <label>2nd Backup Port:</label><br>
+                <input type="text" id="node-data-backup2_port">
             </p>
-            <p class="submit"> 
-                <input id="init-node-submit", type="submit" value="Start Validator" /> 
+            <p class="submit">
+                <input id="init-node-submit", type="submit" value="Start Validator" />
             </p>
         </form>
         <form id="message-broadcast-form">
-            <h2>Broadcast Message</h2>
+            <h2>Broadcast Transaction</h2>
             <p>
-                <label>Message:</label><br>
-                <input type="text" id="message"> 
+                <label>Transaction:</label><br>
+                <input type="text" id="message">
             </p>
-            <p class="submit"> 
-                <input id="broadcast-message-submit", type="submit" value="Broadcast" /> 
+            <p class="submit">
+                <input id="broadcast-message-submit", type="submit" value="Broadcast" />
             </p>
         </form>
         <br>
         <div id="logging-container">
             <h2>Logging</h2>
         </div>
- 
+
         <script type="text/javascript">
             document.getElementById('message-broadcast-form').style.display = 'none'
             document.getElementById('logging-container').style.display = 'none'
 
             const socket = io.connect();
             socket.on('connect', () => {
-                
+
                 socket.on('disconnect', () => {
                     document.getElementById('server-status').innerText = 'Offline';
                     document.getElementById('node-id').innerText = '-';
@@ -95,16 +95,16 @@
                 broadcastMessageForm.addEventListener('submit', broadcastMessage);
 
                 function submitNodeData(event) {
-                    event.preventDefault(); 
-                    const port = document.querySelector('#node-data-port').value; 
-                    const isBackup = document.querySelector('#node-data-isbackup').checked; 
-                    const backup1_port = document.querySelector('#node-data-backup1_port').value; 
-                    const backup2_port = document.querySelector('#node-data-backup2_port').value; 
-                    socket.emit('node-data', JSON.stringify({ 
-                        port: port, 
-                        isBackup: isBackup, 
-                        backup1_port: backup1_port, 
-                        backup2_port: backup2_port, 
+                    event.preventDefault();
+                    const port = document.querySelector('#node-data-port').value;
+                    const isBackup = document.querySelector('#node-data-isbackup').checked;
+                    const backup1_port = document.querySelector('#node-data-backup1_port').value;
+                    const backup2_port = document.querySelector('#node-data-backup2_port').value;
+                    socket.emit('node-data', JSON.stringify({
+                        port: port,
+                        isBackup: isBackup,
+                        backup1_port: backup1_port,
+                        backup2_port: backup2_port,
                     }));
 
                     // Change elements on webpage
@@ -115,7 +115,7 @@
 
                 function broadcastMessage(event) {
                     event.preventDefault();
-                    const message = document.querySelector('#message').value; 
+                    const message = document.querySelector('#message').value;
                     socket.emit('broadcast-message', JSON.stringify({message: message}));
                 }
             });

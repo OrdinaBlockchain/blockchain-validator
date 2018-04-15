@@ -21,6 +21,7 @@ class Messager {
         + currentdate.getMinutes() + ':'
         + currentdate.getSeconds();
         this.socket.emit('logging', '(' + datetime + '): ' + message);
+        console.log('(' + datetime + '): ' + message);
     }
 
     /**
