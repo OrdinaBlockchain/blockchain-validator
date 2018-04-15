@@ -1,5 +1,5 @@
 /** */
-class Logger {
+class Messager {
     /**
      *
      * @param {*} socket
@@ -33,4 +33,4 @@ class Logger {
     }
 }
 
-module.exports = Logger;
+module.exports = Messager;

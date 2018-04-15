@@ -5,7 +5,7 @@ require('dotenv').config();
 const Receiver = require('./services/receiver.js');
 const Sender = require('./services/sender');
 const NodeProvider = require('./services/nodeProvider.js');
-const Logger = require('./util/logger');
+const Messager = require('./util/messager');
 const opn = require('opn');
 const express = require('express');
 const http = require('http');
@@ -13,7 +13,7 @@ let io = require('socket.io');
 
 let sender;
 let node;
-let logger;
+let messager;
 
 // Initialize app with Express
 const app = express();
@@ -37,7 +37,7 @@ io = io.listen(server);
 
 io.on('connection', (socket) => {
     // Initialize logger for real-time webpage logging
-    logger = new Logger(socket);
+    messager = new Messager(socket);
 
     socket.on('node-data', (data) => {
         setEnvironmentVariables(JSON.parse(data.toString('utf8')));
@@ -51,7 +51,7 @@ io.on('connection', (socket) => {
     socket.on('broadcast-message', (data) => {
         if (sender) {
             // For testing purposes
-            sender.broadcastTransaction(data.toString('utf8').message);
+            sender.broadcastTransaction(JSON.parse(data.toString('utf8')).message);
         }
     });
 });
@@ -79,7 +79,7 @@ function initNode() {
 
     // Enable sending and receiving messages
     sender = new Sender(node);
-    new Receiver(sender, node, logger);
+    new Receiver(sender, node, messager);
 
     node.start();
 
