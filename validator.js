@@ -45,7 +45,7 @@ io.on('connection', (socket) => {
         socket.emit('node-initialized', JSON.stringify({
             id: node.id,
             port: process.env.NODE_PORT,
-            isBackup: process.env.IS_BACKUP
+            isBackup: process.env.IS_BACKUP,
         }));
     });
     socket.on('broadcast-message', (data) => {
@@ -53,6 +53,31 @@ io.on('connection', (socket) => {
             // For testing purposes
             sender.broadcastTransaction(JSON.parse(data.toString('utf8')).message);
         }
+    });
+
+    socket.on('generate-keypair', (data) => {
+        socket.emit('keypair', JSON.stringify({
+            pubkey: node.id,
+            privkey: process.env.NODE_PORT,
+        }));
+    });
+
+    socket.on('set-pubkey', (data) => {
+        socket.emit('pubkey-set', JSON.stringify({
+            test: 'test',
+        }));
+    });
+
+    socket.on('generate-transaction-data', (data) => {
+        socket.emit('transaction-generated', JSON.stringify({
+            transaction: 'transaction',
+        }));
+    });
+
+    socket.on('publish-transaction', (data) => {
+        socket.emit('transaction-published', JSON.stringify({
+            transaction: 'transaction',
+        }));
     });
 });
 
