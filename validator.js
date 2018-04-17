@@ -23,7 +23,7 @@ app.use(express.static(__dirname + '/public'));
 
 // Redirect default '/' call to main.htm page
 app.get('/', (req, res) => {
-    res.redirect('/main.html');
+    res.redirect('/index.html');
 });
 
 // Start listening with HTTP (picks random available port)
@@ -40,16 +40,23 @@ io = io.listen(server);
 io.on('connection', (socket) => {
     // Initialize logger for real-time webpage logging
     messager = new Messager(socket);
-
+    setEnvironmentVariables(JSON.parse(JSON.stringify({
+        isBackup: false,
+        host: '10.0.0.4',
+        backup1_host: '10.0.0.2',
+        backup2_host: null,
+        other_host: null,
+    })));
+    initNode();
+    socket.emit('node-initialized', JSON.stringify({
+        id: node.id,
+        port: PORT,
+        isBackup: process.env.IS_BACKUP,
+    }));
     socket.on('node-data', (data) => {
-        setEnvironmentVariables(JSON.parse(data.toString('utf8')));
-        initNode();
-        socket.emit('node-initialized', JSON.stringify({
-            id: node.id,
-            port: PORT,
-            isBackup: process.env.IS_BACKUP,
-        }));
+        return null;
     });
+
     socket.on('broadcast-message', (data) => {
         if (sender) {
             // For testing purposes
@@ -93,7 +100,7 @@ function setEnvironmentVariables(data) {
         process.env.NODE_HOST = data.host;
         process.env.BACKUP_2_HOST = data.other_host;
     } else {
-        process.env.NODE_HOST = '127.0.0.1';
+        process.env.NODE_HOST = '10.0.0.4';
         process.env.BACKUP_1_HOST = data.backup1_host;
         process.env.BACKUP_2_HOST = data.backup2_host;
     }

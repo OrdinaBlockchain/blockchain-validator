@@ -25,10 +25,9 @@
 
             <!-- Logo -->
             <div id="logo">
-                <h1 id="title"></h1>
-                <p>Basic validator</p>
+                <h1 id="node-id"></h1>
+                <p id="node-status"></p>
             </div>
-
             <!-- Nav -->
             <nav id="nav">
                 <!--
@@ -202,6 +201,81 @@
     <script src="assets/js/util.js"></script>
     <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
     <script src="assets/js/main.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+        console.log("Trying to connect");
+        const socket = io.connect();
+        socket.on('connect', () => {
+            console.log("connected");
+            socket.on('disconnect', () => {
+                document.getElementById('server-status').innerText = 'Offline';
+                document.getElementById('node-id').innerText = '-';
+                document.getElementById('node-port').innerText = '-';
+                document.getElementById('node-isbackup').innerText = '-';
+                document.getElementById('node-status').innerText = '-';
+            });
+
+            socket.on('node-initialized', (data) => {
+                data = JSON.parse(data.toString('utf8'));
+                document.getElementById('node-id').innerText = data.id;
+                //document.getElementById('node-port').innerText = data.port;
+                //document.getElementById('node-isbackup').innerText = data.isBackup;
+                document.getElementById('node-status').innerText = 'Disconnected';
+            });
+
+            socket.on('logging', (data) => {
+                document.getElementById('logging-container').innerHTML += data.toString('utf8') + '<br>';
+            })
+
+            socket.on('node-connected', (data) => {
+                document.getElementById('node-status').innerText = 'Connected';
+            });
+
+            socket.on('node-disconnected', (data) => {
+                document.getElementById('node-status').innerText = 'Disconnected';
+            });
+
+
+            // const initNodeForm = document.querySelector('#init-node-form');
+            // initNodeForm.addEventListener('submit', submitNodeData);
+            // const broadcastMessageForm = document.querySelector('#message-broadcast-form');
+            // broadcastMessageForm.addEventListener('submit', broadcastMessage);
+
+            function submitNodeData(event) {
+                event.preventDefault();
+                const isBackup = document.querySelector('#node-data-isbackup').checked;
+                const host = document.querySelector('#node-data-host').value;
+                const port = document.querySelector('#node-data-port').value;
+                const backup1_port = document.querySelector('#node-data-backup1_port').value;
+                const backup1_host = document.querySelector('#node-data-backup1_host').value;
+                const backup2_port = document.querySelector('#node-data-backup2_port').value;
+                const backup2_host = document.querySelector('#node-data-backup2_host').value;
+
+                socket.emit('node-data', JSON.stringify({
+                    isBackup: isBackup,
+                    host: host,
+                    port: port,
+                    backup1_port: backup1_port,
+                    backup1_host: backup1_host,
+                    backup2_port: backup2_port,
+                    backup2_host: backup2_host
+                }));
+
+                // Change elements on webpage
+                document.getElementById('init-node-form').style.display = 'none';
+                document.getElementById('message-broadcast-form').style.display = 'initial'
+                document.getElementById('logging-container').style.display = 'initial'
+            }
+
+            function broadcastMessage(event) {
+                event.preventDefault();
+                const message = document.querySelector('#message').value;
+                socket.emit('broadcast-message', JSON.stringify({
+                    message: message
+                }));
+            }
+        });
+    </script>
 
 </body>
 

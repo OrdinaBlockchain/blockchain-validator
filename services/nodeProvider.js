@@ -5,7 +5,7 @@ const PORT = 9177;
 /** */
 class NodeProvider {
     /** */
-    constructor() { }
+    constructor() {}
 
     /**
      *
@@ -18,7 +18,7 @@ class NodeProvider {
                 port: PORT,
                 address: smoke.localIp(process.env.NODE_HOST),
                 seeds: [
-                    {port: parseInt(process.env.BACKUP_2_PORT), address: process.env.BACKUP_2_HOST},
+                    { port: parseInt(process.env.BACKUP_2_PORT), address: process.env.BACKUP_2_HOST },
                 ],
                 minPeerNo: 1,
                 maxPeerNo: 9999999,
@@ -29,8 +29,8 @@ class NodeProvider {
                 port: PORT,
                 address: smoke.localIp('127.0.0.1'),
                 seeds: [
-                    {port: parseInt(process.env.BACKUP_1_PORT), address: process.env.BACKUP_1_HOST},
-                    {port: parseInt(process.env.BACKUP_2_PORT), address: process.env.BACKUP_2_HOST},
+                    { port: parseInt(process.env.BACKUP_1_PORT), address: process.env.BACKUP_1_HOST },
+                    { port: parseInt(process.env.BACKUP_2_PORT), address: process.env.BACKUP_2_HOST },
                 ],
                 minPeerNo: 1,
                 maxPeerNo: 4,
