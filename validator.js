@@ -15,6 +15,8 @@ let sender;
 let node;
 let messager;
 
+const PORT = 9177;
+
 // Initialize app with Express
 const app = express();
 app.use(express.static(__dirname + '/public'));
@@ -44,8 +46,8 @@ io.on('connection', (socket) => {
         initNode();
         socket.emit('node-initialized', JSON.stringify({
             id: node.id,
-            port: process.env.NODE_PORT,
-            isBackup: process.env.IS_BACKUP
+            port: PORT,
+            isBackup: process.env.IS_BACKUP,
         }));
     });
     socket.on('broadcast-message', (data) => {
@@ -62,16 +64,14 @@ io.on('connection', (socket) => {
  */
 function setEnvironmentVariables(data) {
     process.env.IS_BACKUP = data.isBackup;
-    process.env.NODE_HOST = data.host;
-    process.env.NODE_PORT = data.port;
-
-    // Default is localhost for testing purposes
-    if (data.backup1_host && data.backup1_host !== "") { process.env.BACKUP_1_HOST = data.backup1_host; } else { process.env.BACKUP_1_HOST = '127.0.0.1'; }
-    process.env.BACKUP_1_PORT = data.backup1_port;
-
-    // Default is localhost for testing purposes
-    if (data.backup2_host && data.backup2_host !== "") { process.env.BACKUP_2_HOST = data.backup1_host; } else { process.env.BACKUP_2_HOST = '127.0.0.1'; }
-    process.env.BACKUP_2_PORT = data.backup2_port;
+    if (data.isBackup) {
+        process.env.NODE_HOST = data.host;
+        process.env.BACKUP_2_HOST = data.other_host;
+    } else {
+        process.env.NODE_HOST = '127.0.0.1';
+        process.env.BACKUP_1_HOST = data.backup1_host;
+        process.env.BACKUP_2_HOST = data.backup2_host;
+    }
 }
 
 /** */
