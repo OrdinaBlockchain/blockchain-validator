@@ -1,5 +1,6 @@
 const smoke = require('smokesignal');
 const randomName = require('node-random-name');
+const PORT = 9177;
 
 /** */
 class NodeProvider {
@@ -14,7 +15,7 @@ class NodeProvider {
         let node;
         if (process.env.IS_BACKUP === 'true') {
             node = smoke.createNode({
-                port: parseInt(process.env.NODE_PORT),
+                port: PORT,
                 address: smoke.localIp(process.env.NODE_HOST),
                 seeds: [
                     {port: parseInt(process.env.BACKUP_2_PORT), address: process.env.BACKUP_2_HOST},
@@ -25,8 +26,8 @@ class NodeProvider {
             node.id = 'backup/' + randomName();
         } else {
             node = smoke.createNode({
-                port: parseInt(process.env.NODE_PORT),
-                address: smoke.localIp(process.env.NODE_HOST),
+                port: PORT,
+                address: smoke.localIp('127.0.0.1'),
                 seeds: [
                     {port: parseInt(process.env.BACKUP_1_PORT), address: process.env.BACKUP_1_HOST},
                     {port: parseInt(process.env.BACKUP_2_PORT), address: process.env.BACKUP_2_HOST},

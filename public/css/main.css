@@ -45,3 +45,7 @@ label, h2 {
 #validator-status-container > label {
     margin-left: 30px;
 }
+
+#logging-logs {
+    max-height: 1em;
+}
