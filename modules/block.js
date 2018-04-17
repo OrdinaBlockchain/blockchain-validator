@@ -10,7 +10,7 @@ class Block {
     constructor(data) {
         this.transactions = [];
         if (data.constructorVersion === 1) {
-            this.header = new BlockHeader(data.coinbase, data.parentHash, data.version);
+            this.header = new BlockHeader(data);
             this.BLOCK_REWARD = 50;
         } else {
             this.deserialize(data);
@@ -44,7 +44,7 @@ class Block {
      */
     addTransaction(transaction) {
         // Only add new Transactions if the block is not already finished.
-        if (this.header.blockHash === '0' || this.header.blockHash === undefined) {
+        if (this.header.blockHash === '0' || this.header.blockHash === null) {
             this.transactions.push(transaction);
         }
     }

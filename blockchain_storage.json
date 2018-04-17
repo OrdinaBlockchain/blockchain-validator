@@ -1,0 +1,61 @@
+{
+  "blocks": [
+    {
+      "transactions": [],
+      "header": {
+        "coinbase": "SNOW20cf5e97e4bc0c181708ff",
+        "parentHash": "0",
+        "version": "v2.0",
+        "timestamp": 1523960391308,
+        "blockHash": "e505fb2c24339b1d3793a4aa094eab66395d44473312db2a6affd2fdf8025648"
+      },
+      "BLOCK_REWARD": 50
+    },
+    {
+      "transactions": [],
+      "header": {
+        "coinbase": "SNOW20cf5e97e4bc0c181708ff",
+        "parentHash": "e505fb2c24339b1d3793a4aa094eab66395d44473312db2a6affd2fdf8025648",
+        "version": "v2.0",
+        "timestamp": 1523960391427,
+        "blockHash": "ac7829ee0e24d183621be1011c2319adedbdde689c780c91bfbaaa0276d7025e"
+      },
+      "BLOCK_REWARD": 50
+    },
+    {
+      "transactions": [],
+      "header": {
+        "coinbase": "SNOW20cf5e97e4bc0c181708ff",
+        "parentHash": "ac7829ee0e24d183621be1011c2319adedbdde689c780c91bfbaaa0276d7025e",
+        "version": "v2.0",
+        "timestamp": 1523960391458,
+        "blockHash": "d237fa520c8e482509c1bbdf8114b8aa682a556282cde39d939604db7fd979d4"
+      },
+      "BLOCK_REWARD": 50
+    },
+    {
+      "transactions": [],
+      "header": {
+        "coinbase": "SNOW20cf5e97e4bc0c181708ff",
+        "parentHash": "d237fa520c8e482509c1bbdf8114b8aa682a556282cde39d939604db7fd979d4",
+        "version": "v2.0",
+        "timestamp": 1523960391488,
+        "blockHash": "26cabe94b37d29ffc9abf45c32189697f30396f4cd9294b0a4146348790a8d3a"
+      },
+      "BLOCK_REWARD": 50
+    },
+    {
+      "transactions": [],
+      "header": {
+        "coinbase": "SNOW20cf5e97e4bc0c181708ff",
+        "parentHash": "26cabe94b37d29ffc9abf45c32189697f30396f4cd9294b0a4146348790a8d3a",
+        "version": "v2.0",
+        "timestamp": 1523960391518,
+        "blockHash": "4c900190b6ed47bb910000f6c238206e36f10e3c112a53e2f5cebd75c7ddc30d"
+      },
+      "BLOCK_REWARD": 50
+    }
+  ],
+  "coinbase": "SNOW20cf5e97e4bc0c181708ff",
+  "version": "v1.0"
+}

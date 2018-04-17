@@ -9,9 +9,9 @@ class BlockHeader {
      */
     constructor(data) {
         if (data.constructorVersion === 1) {
-            this.coinbase = data.header.coinbase;
-            this.parentHash = data.header.parentHash;
-            this.version = data.header.version;
+            this.coinbase = data.coinbase;
+            this.parentHash = data.parentHash;
+            this.version = data.version;
             this.timestamp = Date.now();
             this.blockHash = null;
         } else {

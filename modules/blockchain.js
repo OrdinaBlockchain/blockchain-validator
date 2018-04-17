@@ -16,6 +16,14 @@ class Blockchain {
         this.deserialize();
         this.coinbase = coinbase;
         this.version = version;
+        let data = {
+            constructorVersion: 1,
+            coinbase: this.coinbase,
+            parentHash: this.getLatestBlock().header.blockHash,
+            version: this.version
+        };
+
+        this.currentBlock = new Block(data);
     }
 
     /**
@@ -38,7 +46,6 @@ class Blockchain {
      * @param {Transaction} transaction
      */
     addTransaction(transaction) {
-        console.log(this.isValidTransaction());
         if (this.isValidTransaction(transaction)) {
             this.currentBlock.addTransaction(transaction);
         }
@@ -46,7 +53,14 @@ class Blockchain {
         // TODO remove when other block limit is implemented
         if (this.currentBlock.transactions.length > 9) {
             this.addBlock(this.currentBlock);
-            this.currentBlock = new Block(this.coinbase, '0', this.version);
+            let data = {
+                constructorVersion: 1,
+                coinbase: this.coinbase,
+                version: this.version,
+                parentHash: this.getLatestBlock().header.blockHash
+            };
+
+            this.currentBlock = new Block(data);
         }
     }
 
@@ -56,11 +70,11 @@ class Blockchain {
      * @return {boolean}
      */
     isValidTransaction(transaction) {
-        // TODO check if address is a correct address
-        let isTransaction = transaction instanceof Transaction;
-        let hasFunds = this.getBalanceOf(transaction._senderpubkey) >= transaction._amount;
-
-        return isTransaction && hasFunds;
+        // TODO check if address is a correct addressb
+        if (this.validateTransactionFormat(transaction) && transaction.verifySignature()) {
+            return this.getBalanceOf(transaction._senderpubkey) >= transaction._amount;
+        }
+        return false;
     }
 
     /**
@@ -118,8 +132,6 @@ class Blockchain {
         if (this.blocks.length > 0) {
             return this.blocks[this.blocks.length - 1];
         }
-
-        return this.currentBlock;
     }
 
     /**
@@ -132,6 +144,7 @@ class Blockchain {
         let balance = 0;
         let currentTransaction = null;
 
+        // TODO check current block for transactions.
         for (let i = 0; i < this.blocks.length; i++) {
             currentBlock = this.blocks[i];
 
@@ -156,6 +169,18 @@ class Blockchain {
         }
 
         return balance;
+    }
+
+    /**
+     * Calculates and returns balance of an address.
+     * @param {json} transaction
+     * @return {bool} isValid
+     */
+    validateTransactionFormat(transaction) {
+        if (transaction instanceof Transaction) {
+            return true;
+        }
+        return false;
     }
 }
 

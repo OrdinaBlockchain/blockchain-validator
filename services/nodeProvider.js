@@ -6,7 +6,7 @@ const BACKUP_PORT = 9178;
 /** */
 class NodeProvider {
     /** */
-    constructor() {}
+    constructor() { }
 
     /**
      *
@@ -19,7 +19,7 @@ class NodeProvider {
                 port: BACKUP_PORT,
                 address: process.env.NODE_HOST,
                 seeds: [
-                    { port: BACKUP_PORT, address: process.env.BACKUP_2_HOST },
+                    {port: BACKUP_PORT, address: process.env.BACKUP_2_HOST},
                 ],
                 minPeerNo: 1,
                 maxPeerNo: 9999999,
@@ -30,8 +30,8 @@ class NodeProvider {
                 port: PORT,
                 address: process.env.NODE_HOST,
                 seeds: [
-                    { port: BACKUP_PORT, address: process.env.BACKUP_1_HOST },
-                    { port: BACKUP_PORT, address: process.env.BACKUP_2_HOST },
+                    {port: BACKUP_PORT, address: process.env.BACKUP_1_HOST},
+                    {port: BACKUP_PORT, address: process.env.BACKUP_2_HOST},
                 ],
                 minPeerNo: 1,
                 maxPeerNo: 4,
