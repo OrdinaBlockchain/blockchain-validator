@@ -1,4 +1,4 @@
-const Transaction = require('../modules/transaction');
+const Blockchain = require('../modules/Blockchain');
 
 /** */
 class Receiver {
@@ -90,16 +90,12 @@ class Receiver {
      * @param {*} data
      */
     onNewTransaction(data) {
-        try {
-            const transaction = new Transaction(data.transactionData);
-            if (transaction.verifySignature()) {
-                this.messager.log('Valid transaction signature');
-            } else {
-                this.messager.log('Invalid transaction signature');
-            }
-        } catch (err) {
-            console.log(err);
-            this.messager.log(data.transactionData);
+        new Blockchain().addTransaction(data.transactionData);
+        const transaction = new Transaction(data.transactionData);
+        if (transaction.verifySignature()) {
+
+        } else {
+            this.messager.log('Invalid transaction signature');
         }
     }
 }
