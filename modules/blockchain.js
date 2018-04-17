@@ -16,6 +16,14 @@ class Blockchain {
         this.deserialize();
         this.coinbase = coinbase;
         this.version = version;
+        let data = {
+            constructorVersion: 1,
+            coinbase: this.coinbase,
+            parentHash: this.getLatestBlock().header.blockHash,
+            version: this.version
+        };
+
+        this.currentBlock = new Block(data);
     }
 
     /**
@@ -38,7 +46,6 @@ class Blockchain {
      * @param {Transaction} transaction
      */
     addTransaction(transaction) {
-        console.log(this.isValidTransaction());
         if (this.isValidTransaction(transaction)) {
             this.currentBlock.addTransaction(transaction);
         }
@@ -46,7 +53,14 @@ class Blockchain {
         // TODO remove when other block limit is implemented
         if (this.currentBlock.transactions.length > 9) {
             this.addBlock(this.currentBlock);
-            this.currentBlock = new Block(this.coinbase, '0', this.version);
+            let data = {
+                constructorVersion: 1,
+                coinbase: this.coinbase,
+                version: this.version,
+                parentHash: this.getLatestBlock().header.blockHash
+            };
+
+            this.currentBlock = new Block(data);
         }
     }
 
@@ -118,8 +132,6 @@ class Blockchain {
         if (this.blocks.length > 0) {
             return this.blocks[this.blocks.length - 1];
         }
-
-        return this.currentBlock;
     }
 
     /**
