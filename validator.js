@@ -46,6 +46,7 @@ io.on('connection', (socket) => {
         initNode();
         socket.emit('node-initialized', JSON.stringify({
             id: node.id,
+            host: process.env.NODE_HOST,
             port: PORT,
             isBackup: process.env.IS_BACKUP,
         }));

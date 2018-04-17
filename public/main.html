@@ -13,6 +13,8 @@
     </div>
     <div id="validator-status-container">
         <label>Node Id: </label><span id="node-id">-</span>
+        <label>Host: </label><span id="node-host">-</span>
+        <label>Port: </label><span id="node-port">-</span>
         <label>Is Backup: </label><span id="node-isbackup">-</span>
         <label>Status: </label><span id="node-status">-</span>
     </div>
@@ -85,6 +87,8 @@
             socket.on('disconnect', () => {
                 document.getElementById('server-status').innerText = 'Offline';
                 document.getElementById('node-id').innerText = '-';
+                document.getElementById('node-port').innerText = '-';
+                document.getElementById('node-host').innerText = '-';
                 document.getElementById('node-isbackup').innerText = '-';
                 document.getElementById('node-status').innerText = '-';
             });
@@ -92,6 +96,8 @@
             socket.on('node-initialized', (data) => {
                 data = JSON.parse(data.toString('utf8'));
                 document.getElementById('node-id').innerText = data.id;
+                document.getElementById('node-host').innerText = data.host;
+                document.getElementById('node-port').innerText = data.port;
                 document.getElementById('node-isbackup').innerText = data.isBackup;
                 document.getElementById('node-status').innerText = 'Disconnected';
             });
