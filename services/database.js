@@ -47,13 +47,25 @@ class Database {
         })
     }
 
+    /**
+     * 
+     * @param {*} key 
+     */
     static delete(key) {
         db.del(key, function (err) {
             if (err && verbose) console.log(err);
         });
     }
 
-
+    /**
+     * 
+     * @param {*} ops {type: 'put/del', key:'key', value:'value'}
+     */
+    static batch(ops) {
+        db.batch(ops, function (err) {
+            if (err && verbose) console.log(err)
+        })
+    }
 
 }
 
