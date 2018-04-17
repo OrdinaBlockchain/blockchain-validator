@@ -5,17 +5,22 @@ const Security = require('../logic/security');
  */
 class BlockHeader {
     /**
-     *
-     * @param {string} coinbase
-     * @param {string} parentHash
-     * @param {string} version
+     * @param {*} data
      */
-    constructor(coinbase, parentHash, version) {
-        this.coinbase = coinbase;
-        this.parentHash = parentHash;
-        this.version = version;
-        this.timeStamp = Date.now();
-        this.blockHash = null;
+    constructor(data) {
+        if (data.constructorVersion === 1) {
+            this.coinbase = data.header.coinbase;
+            this.parentHash = data.header.parentHash;
+            this.version = data.header.version;
+            this.timestamp = Date.now();
+            this.blockHash = null;
+        } else {
+            this.coinbase = data.header.coinbase;
+            this.parentHash = data.header.parentHash;
+            this.version = data.header.version;
+            this.timestamp = data.header.timestamp;
+            this.blockHash = data.header.blockHash;
+        }
     }
 
     /**
@@ -26,7 +31,7 @@ class BlockHeader {
     calculateBlockHash(blockData) {
         let hash = '0';
         if (this.isValidHeaderData(blockData)) {
-            hash = Security.hash(this.coinbase + this.parentHash + this.version + this.timeStamp + blockData);
+            hash = Security.hash(this.coinbase + this.parentHash + this.version + this.timestamp + blockData);
         }
 
         return hash;
@@ -38,7 +43,7 @@ class BlockHeader {
      * @return {boolean}
      */
     isValidHeaderData(blockData) {
-        return this.coinbase != null && this.parentHash != null && this.version != null && this.timeStamp <= Date.now() && blockData instanceof Array;
+        return this.coinbase != null && this.parentHash != null && this.version != null && this.timestamp <= Date.now();
     }
 }
 
