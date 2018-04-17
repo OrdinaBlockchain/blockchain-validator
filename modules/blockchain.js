@@ -144,6 +144,7 @@ class Blockchain {
         let balance = 0;
         let currentTransaction = null;
 
+        // TODO check current block for transactions.
         for (let i = 0; i < this.blocks.length; i++) {
             currentBlock = this.blocks[i];
 
