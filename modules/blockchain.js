@@ -25,6 +25,12 @@ class Blockchain {
         if (this.isValidTransaction(transaction)) {
             this.currentBlock.addTransaction(transaction);
         }
+
+        // TODO remove when other block limit is implemented
+        if (this.currentBlock.transactions.length > 9) {
+            this.addBlock(this.currentBlock);
+            this.currentBlock = new Block(this.coinbase, '0', this.version);
+        }
     }
 
     /**
