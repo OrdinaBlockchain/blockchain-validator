@@ -16,7 +16,7 @@ let io = require('socket.io');
 let sender;
 let node;
 let messager;
-
+let connected = false;
 let PORT = 9177;
 
 // Initialize app with Express
@@ -42,22 +42,21 @@ io = io.listen(server);
 io.on('connection', (socket) => {
     // Initialize logger for real-time webpage logging
     messager = new Messager(socket);
-
-    initNode();
-    socket.emit('node-initialized', JSON.stringify({
-        id: node.id,
-        port: PORT,
-        isBackup: process.env.IS_BACKUP,
-    }));
-    socket.on('node-data', (data) => {
-        initNode();
-        socket.emit('node-initialized', JSON.stringify({
+    if (connected) {
+        messager.notify('node-initialized', JSON.stringify({
             id: node.id,
-            host: process.env.NODE_HOST,
             port: PORT,
             isBackup: process.env.IS_BACKUP,
         }));
-    });
+        messager.notify('node-connected');
+    } else {
+        initNode();
+        messager.notify('node-initialized', JSON.stringify({
+            id: node.id,
+            port: PORT,
+            isBackup: process.env.IS_BACKUP,
+        }));
+    }
 
     socket.on('broadcast-message', (data) => {
         if (sender) {
@@ -68,15 +67,15 @@ io.on('connection', (socket) => {
 
     socket.on('generate-keypair', (data) => {
         let mnemonic = Security.generateMnemonic();
-        let keypair = { pubKey: pubKey, privKey: privKey } = Security.generateKeyPair(mnemonic); // eslint-disable-line no-undef
-        socket.emit('keypair', JSON.stringify({
+        let keypair = Security.generateKeyPair(mnemonic);
+        messager.notify('keypair', {
             pubkey: keypair.pubKey,
             privkey: keypair.privKey,
-        }));
+        });
     });
 
     socket.on('set-pubkey', (data) => {
-        socket.emit('pubkey-set', JSON.stringify({
+        messager.notify('pubkey-set', JSON.stringify({
             test: 'test',
         }));
     });
@@ -85,13 +84,13 @@ io.on('connection', (socket) => {
 
 
 
-        socket.emit('transaction-generated', JSON.stringify({
+        messager.notify('transaction-generated', JSON.stringify({
             transaction: 'transaction',
         }));
     });
 
     socket.on('publish-transaction', (data) => {
-        socket.emit('transaction-published', JSON.stringify({
+        messager.notify('transaction-published', JSON.stringify({
             transaction: 'transaction',
         }));
     });
@@ -106,6 +105,6 @@ function initNode() {
     new Receiver(sender, node, messager);
 
     node.start();
-
+    connected = true;
     console.log('Validator listening on port %s', PORT);
 }

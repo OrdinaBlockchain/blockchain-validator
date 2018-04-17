@@ -70,11 +70,11 @@ class Blockchain {
      * @return {boolean}
      */
     isValidTransaction(transaction) {
-        // TODO check if address is a correct address
-        let isTransaction = transaction instanceof Transaction;
-        let hasFunds = this.getBalanceOf(transaction._senderpubkey) >= transaction._amount;
-
-        return isTransaction && hasFunds;
+        // TODO check if address is a correct addressb
+        if (this.validateTransactionFormat(transaction) && transaction.verifySignature()) {
+            return this.getBalanceOf(transaction._senderpubkey) >= transaction._amount;
+        }
+        return false;
     }
 
     /**
@@ -153,6 +153,18 @@ class Blockchain {
         // Check for Transactions in current block.
         balance += this.currentBlock.getBlockBalanceOf(address, 0);
         return balance;
+    }
+
+    /**
+     * Calculates and returns balance of an address.
+     * @param {json} transaction
+     * @return {bool} isValid
+     */
+    validateTransactionFormat(transaction) {
+        if (transaction instanceof Transaction) {
+            return true;
+        }
+        return false;
     }
 }
 
