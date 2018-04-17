@@ -15,6 +15,7 @@ class BlockHeader {
         this.parentHash = parentHash;
         this.version = version;
         this.timeStamp = Date.now();
+        this.blockHash = null;
     }
 
     /**
@@ -43,7 +44,7 @@ class BlockHeader {
      * @return {boolean}
      */
     isValidHeaderData(blockData) {
-        return this.coinbase && this.parentHash && this.version && this.timeStamp && blockData instanceof Array;
+        return this.coinbase != null && this.parentHash != null && this.version != null && this.timeStamp <= Date.now() && blockData instanceof Array;
     }
 }
 
