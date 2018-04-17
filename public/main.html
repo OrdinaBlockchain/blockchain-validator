@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 
 <head>
@@ -13,39 +13,36 @@
     </div>
     <div id="validator-status-container">
         <label>Node Id: </label><span id="node-id">-</span>
-        <label>Node Port: </label><span id="node-port">-</span>
+        <label>Host: </label><span id="node-host">-</span>
+        <label>Port: </label><span id="node-port">-</span>
         <label>Is Backup: </label><span id="node-isbackup">-</span>
         <label>Status: </label><span id="node-status">-</span>
     </div>
     <hr>
     <form id="init-node-form">
         <h2>Initialize Node</h2>
-        <p>
+        <p id="container-node-data-isbackup">
             <label>Is Backup:</label>
-            <input type="checkbox" id="node-data-isbackup">
+            <input type="checkbox" id="node-data-isbackup" onclick='onChange();'>
         </p>
-        <p>
-            <label>Node Port:</label><br>
-            <input type="text" id="node-data-port" autofocus>
+        <p id="container-node-data-host">
+            <label>Node Host:</label><br>
+            <input type="text" id="node-data-host" autofocus>
         </p>
-        <p>
-            <label>1st Backup Port:</label><br>
-            <input type="text" id="node-data-backup1_port">
-        </p>
-        <p>
+        <p id="container-node-data-backup1_host">
             <label>1st Backup Host:</label><br>
-            <input type="text" id="node-data-backup1_host" placeholder="optional">
+            <input type="text" id="node-data-backup1_host">
         </p>
-        <p>
-            <label>2nd Backup Port:</label><br>
-            <input type="text" id="node-data-backup2_port">
-        </p>
-        <p>
+        <p id="container-node-data-backup2_host">
             <label>2nd Backup Host:</label><br>
-            <input type="text" id="node-data-backup2_host" placeholder="optional">
+            <input type="text" id="node-data-backup2_host">
+        </p>
+        <p id="container-node-data-other_host">
+            <label>Other Backup Host:</label><br>
+            <input type="text" id="node-data-other_host">
         </p>
         <p class="submit">
-            <input id="init-node-submit" , type="submit" value="Start Validator" />
+            <input id="init-node-submit" type="submit" value="Start Validator" />
         </p>
     </form>
     <form id="message-broadcast-form">
@@ -61,11 +58,28 @@
     <br>
     <div id="logging-container">
         <h2>Logging</h2>
+        <div id="logging-logs"></div>
     </div>
 
     <script type="text/javascript">
+        document.getElementById('container-node-data-host').style.display = 'none';
+        document.getElementById('container-node-data-other_host').style.display = 'none';
         document.getElementById('message-broadcast-form').style.display = 'none'
         document.getElementById('logging-container').style.display = 'none'
+
+        const onChange = () => {
+            if (document.querySelector('#node-data-isbackup').checked) {
+                document.getElementById('container-node-data-host').style.display = 'inherit';
+                document.getElementById('container-node-data-backup1_host').style.display = 'none';
+                document.getElementById('container-node-data-backup2_host').style.display = 'none';
+                document.getElementById('container-node-data-other_host').style.display = 'inherit';
+            } else {
+                document.getElementById('container-node-data-host').style.display = 'none';
+                document.getElementById('container-node-data-backup1_host').style.display = 'inherit';
+                document.getElementById('container-node-data-backup2_host').style.display = 'inherit';
+                document.getElementById('container-node-data-other_host').style.display = 'none';
+            }
+        }
 
         const socket = io.connect();
         socket.on('connect', () => {
@@ -74,6 +88,7 @@
                 document.getElementById('server-status').innerText = 'Offline';
                 document.getElementById('node-id').innerText = '-';
                 document.getElementById('node-port').innerText = '-';
+                document.getElementById('node-host').innerText = '-';
                 document.getElementById('node-isbackup').innerText = '-';
                 document.getElementById('node-status').innerText = '-';
             });
@@ -81,13 +96,15 @@
             socket.on('node-initialized', (data) => {
                 data = JSON.parse(data.toString('utf8'));
                 document.getElementById('node-id').innerText = data.id;
+                document.getElementById('node-host').innerText = data.host;
                 document.getElementById('node-port').innerText = data.port;
                 document.getElementById('node-isbackup').innerText = data.isBackup;
                 document.getElementById('node-status').innerText = 'Disconnected';
             });
 
             socket.on('logging', (data) => {
-                document.getElementById('logging-container').innerHTML += data.toString('utf8') + '<br>';
+                const currentLogs = document.getElementById('logging-logs').innerHTML;
+                document.getElementById('logging-logs').innerHTML = data.toString('utf8') + '<br>' + currentLogs;
             })
 
             socket.on('node-connected', (data) => {
@@ -106,20 +123,18 @@
 
             function submitNodeData(event) {
                 event.preventDefault();
-                const port = document.querySelector('#node-data-port').value;
                 const isBackup = document.querySelector('#node-data-isbackup').checked;
-                const backup1_port = document.querySelector('#node-data-backup1_port').value;
+                const host = document.querySelector('#node-data-host').value;
                 const backup1_host = document.querySelector('#node-data-backup1_host').value;
-                const backup2_port = document.querySelector('#node-data-backup2_port').value;
                 const backup2_host = document.querySelector('#node-data-backup2_host').value;
+                const other_host = document.querySelector('#node-data-other_host').value;
 
                 socket.emit('node-data', JSON.stringify({
-                    port: port,
                     isBackup: isBackup,
-                    backup1_port: backup1_port,
+                    host: host,
                     backup1_host: backup1_host,
-                    backup2_port: backup2_port,
-                    backup2_host: backup2_host
+                    backup2_host: backup2_host,
+                    other_host: other_host,
                 }));
 
                 // Change elements on webpage

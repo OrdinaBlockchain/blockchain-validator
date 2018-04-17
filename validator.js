@@ -15,13 +15,15 @@ let sender;
 let node;
 let messager;
 
+const PORT = 9177;
+
 // Initialize app with Express
 const app = express();
 app.use(express.static(__dirname + '/public'));
 
 // Redirect default '/' call to main.htm page
 app.get('/', (req, res) => {
-    res.redirect('/main.htm');
+    res.redirect('/main.html');
 });
 
 // Start listening with HTTP (picks random available port)
@@ -44,8 +46,9 @@ io.on('connection', (socket) => {
         initNode();
         socket.emit('node-initialized', JSON.stringify({
             id: node.id,
-            port: process.env.NODE_PORT,
-            isBackup: process.env.IS_BACKUP
+            host: process.env.NODE_HOST,
+            port: PORT,
+            isBackup: process.env.IS_BACKUP,
         }));
     });
     socket.on('broadcast-message', (data) => {
@@ -61,16 +64,15 @@ io.on('connection', (socket) => {
  * @param {*} data
  */
 function setEnvironmentVariables(data) {
-    process.env.NODE_PORT = data.port;
     process.env.IS_BACKUP = data.isBackup;
-
-    // Default is localhost for testing purposes
-    if (data.backup1_host && data.backup1_host !== "") { process.env.BACKUP_1_HOST = data.backup1_host; } else { process.env.BACKUP_1_HOST = '127.0.0.1'; }
-    process.env.BACKUP_1_PORT = data.backup1_port;
-
-    // Default is localhost for testing purposes
-    if (data.backup2_host && data.backup2_host !== "") { process.env.BACKUP_2_HOST = data.backup1_host; } else { process.env.BACKUP_2_HOST = '127.0.0.1'; }
-    process.env.BACKUP_2_PORT = data.backup2_port;
+    if (data.isBackup) {
+        process.env.NODE_HOST = data.host;
+        process.env.BACKUP_2_HOST = data.other_host;
+    } else {
+        process.env.NODE_HOST = '127.0.0.1';
+        process.env.BACKUP_1_HOST = data.backup1_host;
+        process.env.BACKUP_2_HOST = data.backup2_host;
+    }
 }
 
 /** */
@@ -83,5 +85,5 @@ function initNode() {
 
     node.start();
 
-    console.log('Validator listening on port %s', process.env.NODE_PORT);
+    console.log('Validator listening on port %s', PORT);
 }
