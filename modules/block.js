@@ -5,15 +5,35 @@ let BlockHeader = require('./blockheader.js');
  */
 class Block {
     /**
-     *
-     * @param {*} coinbase
-     * @param {*} parentHash
-     * @param {*} version
+     * @param {*} data
      */
-    constructor(coinbase, parentHash, version) {
+    constructor(data) {
         this.transactions = [];
-        this.header = new BlockHeader(coinbase, parentHash, version);
-        this.BLOCK_REWARD = 50;
+        if (data.constructorVersion === 1) {
+            this.header = new BlockHeader(data.coinbase, data.parentHash, data.version);
+            this.BLOCK_REWARD = 50;
+        } else {
+            this.deserialize(data);
+        }
+    }
+
+    /**
+     * Reads the Block from a JSON file, and deserializes it back to a Block Object.
+     * @param data
+     */
+    deserialize(data) {
+        let currentBlock = data.block;
+        let headerData = {
+            constructorVersion: 2,
+            header: currentBlock.header
+        };
+
+        this.header = new BlockHeader(headerData);
+        this.BLOCK_REWARD = currentBlock.BLOCK_REWARD;
+
+        for (let i = 0; i < currentBlock.transactions.length; i++) {
+            this.transactions.push(new Transaction(currentBlock.transactions[i]))
+        }
     }
 
     /**
@@ -42,7 +62,7 @@ class Block {
      * @return {boolean}
      */
     hasValidHeader() {
-        return this.header.calculateBlockHash(this.transactions) === this.header.blockHash;
+        return this.header.blockHash === this.header.calculateBlockHash(this.transactions);
     }
 }
 
