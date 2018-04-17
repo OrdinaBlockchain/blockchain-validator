@@ -85,5 +85,5 @@ function initNode() {
 
     node.start();
 
-    console.log('Validator listening on port %s', process.env.NODE_PORT);
+    console.log('Validator listening on port %s', PORT);
 }
