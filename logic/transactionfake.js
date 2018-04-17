@@ -21,7 +21,8 @@ let json;
 
 async.series([
     (callback) => {
-        rl.question('Write to file', function(args) {
+
+        rl.question('Write to file', function (args) {
             let data = {
                 senderpubkey: pubKey1,
                 receiveraddress: pubKey2,
@@ -31,14 +32,14 @@ async.series([
 
             json = JSON.stringify(new Transaction(data));
 
-            fs.writeFile('transaction.json', json, 'utf8', callback);
+            //fs.writeFile('transaction.json', json, 'utf8', callback);
         });
     },
     (callback) => {
-        rl.question('Write signed to file', function(args) {
+        rl.question('Write signed to file', function (args) {
             let transactionJson = JSON.parse(json);
 
-            let message = transactionJson._senderpubkey + transactionJson._receiveraddress + transactionJson._amount + transactionJson._timestamp;
+            let message = transactionJson._senderpubkey + transactionJson._receiveraddress + transactionJson._amount + transactionJson._timestamp
             let signature = security.signDetached(message, privKey1);
 
             let data = {
@@ -50,7 +51,7 @@ async.series([
             };
             let jsonSigned = JSON.stringify(new Transaction(data));
 
-            fs.writeFile('signedTransaction.json', jsonSigned, 'utf8', callback);
+            //fs.writeFile('signedTransaction.json', jsonSigned, 'utf8', callback);
         });
     },
 ], () => {
