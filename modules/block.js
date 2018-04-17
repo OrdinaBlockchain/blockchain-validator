@@ -64,6 +64,36 @@ class Block {
     hasValidHeader() {
         return this.header.blockHash === this.header.calculateBlockHash(this.transactions);
     }
+
+    /**
+     * Gets the balance of an address for this block.
+     * @param address
+     * @param depth
+     * @returns {number}
+     */
+    getBlockBalanceOf(address, depth) {
+        let balance = 0;
+        // Check coinbase Transactions
+        if (this.header.coinbase === address && depth > 0) {
+            balance += this.BLOCK_REWARD;
+        }
+
+        for (let j = 0; j < this.transactions.length; j++) {
+            let currentTransaction = this.transactions[j];
+
+            // Check incoming balance.
+            if (currentTransaction._receiveraddress === address) {
+                balance += currentTransaction._amount;
+            }
+
+            // Check outgoing balance.
+            if (currentTransaction._senderpubkey === address) {
+                balance -= currentTransaction._amount;
+            }
+        }
+
+        return balance;
+    }
 }
 
 module.exports = Block;

@@ -142,32 +142,16 @@ class Blockchain {
     getBalanceOf(address) {
         let currentBlock = null;
         let balance = 0;
-        let currentTransaction = null;
 
-        // TODO check current block for transactions.
+        // Check all blocks for Transactions
         for (let i = 0; i < this.blocks.length; i++) {
             currentBlock = this.blocks[i];
-
-            // Check coinbase Transactions
-            if (currentBlock.header.coinbase === address) {
-                balance += currentBlock.BLOCK_REWARD;
-            }
-
-            for (let j = 0; j < currentBlock.transactions.length; j++) {
-                currentTransaction = currentBlock.transactions[j];
-
-                // Check incoming balance.
-                if (currentTransaction._receiveraddress === address) {
-                    balance += currentTransaction._amount;
-                }
-
-                // Check outgoing balance.
-                if (currentTransaction._senderpubkey === address) {
-                    balance -= currentTransaction._amount;
-                }
-            }
+            // TODO to 2 methods: Transactions & coinbase Transactions
+            balance += currentBlock.getBlockBalanceOf(address, this.blocks.length - i);
         }
 
+        // Check for Transactions in current block.
+        balance += this.currentBlock.getBlockBalanceOf(address, 0);
         return balance;
     }
 }
