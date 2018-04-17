@@ -15,7 +15,7 @@ let sender;
 let node;
 let messager;
 
-const PORT = 9177;
+let PORT = 9177;
 
 // Initialize app with Express
 const app = express();
@@ -54,7 +54,14 @@ io.on('connection', (socket) => {
         isBackup: process.env.IS_BACKUP,
     }));
     socket.on('node-data', (data) => {
-        return null;
+        setEnvironmentVariables(JSON.parse(data.toString('utf8')));
+        initNode();
+        socket.emit('node-initialized', JSON.stringify({
+            id: node.id,
+            host: process.env.NODE_HOST,
+            port: PORT,
+            isBackup: process.env.IS_BACKUP,
+        }));
     });
 
     socket.on('broadcast-message', (data) => {
@@ -96,13 +103,18 @@ io.on('connection', (socket) => {
  */
 function setEnvironmentVariables(data) {
     process.env.IS_BACKUP = data.isBackup;
+    console.log(data.isBackup);
     if (data.isBackup) {
         process.env.NODE_HOST = data.host;
         process.env.BACKUP_2_HOST = data.other_host;
+        PORT = 9178;
+        console.log('Is backup: %s : %s', process.env.NODE_HOST, process.env.BACKUP_2_HOST);
     } else {
         process.env.NODE_HOST = '10.0.0.4';
         process.env.BACKUP_1_HOST = data.backup1_host;
         process.env.BACKUP_2_HOST = data.backup2_host;
+        PORT = 9177;
+        console.log('Is not backup: %s : %s : %s', process.env.NODE_HOST, process.env.BACKUP_1_HOST, process.env.BACKUP_2_HOST);
     }
 }
 
@@ -116,5 +128,5 @@ function initNode() {
 
     node.start();
 
-    console.log('Validator listening on port %s', process.env.NODE_PORT);
+    console.log('Validator listening on port %s', PORT);
 }

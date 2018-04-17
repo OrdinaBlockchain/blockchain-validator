@@ -1,5 +1,6 @@
 let Transaction = require('./transaction.js');
 let Block = require('./block.js');
+let fs = require('fs');
 
 /**
  * Blockchain is a value object containing the list of all Blocks.
@@ -12,9 +13,24 @@ class Blockchain {
      */
     constructor(coinbase, version) {
         this.blocks = [];
+        this.deserialize();
         this.coinbase = coinbase;
         this.version = version;
-        this.currentBlock = new Block(coinbase, '0', version);
+    }
+
+    /**
+     * Reads the Blockchain from a JSON file, and deserializes it back to a Blockchain Object.
+     */
+    deserialize() {
+        let storedChain = JSON.parse(fs.readFileSync('blockchain_storage.json', 'utf8')); // Read stored chain from stored file.
+        for (let i = 0; i < storedChain.blocks.length; i++) {
+            let data = {
+                constructorVersion: 2,
+                block: storedChain.blocks[i]
+            };
+            let newBlock = new Block(data);
+            this.blocks.push(newBlock)
+        }
     }
 
     /**
@@ -22,6 +38,7 @@ class Blockchain {
      * @param {Transaction} transaction
      */
     addTransaction(transaction) {
+        console.log(this.isValidTransaction());
         if (this.isValidTransaction(transaction)) {
             this.currentBlock.addTransaction(transaction);
         }
@@ -78,12 +95,14 @@ class Blockchain {
 
             // Chain is not valid if the currentBlock.parentHash !== blockHash of the previous block.
             if (currentBlock.header.parentHash !== parentHash) {
+                console.log("1");
                 return false;
             }
             parentHash = currentBlock.header.blockHash;
 
             // Chain is not valid if >0 blocks are invalid.
             if (!this.isValidBlock(currentBlock)) {
+                console.log("2");
                 return false;
             }
         }
@@ -99,6 +118,8 @@ class Blockchain {
         if (this.blocks.length > 0) {
             return this.blocks[this.blocks.length - 1];
         }
+
+        return this.currentBlock;
     }
 
     /**
