@@ -24,15 +24,9 @@ class BlockHeader {
      * @return {string} hash
      */
     calculateBlockHash(blockData) {
-        // Create local variables to insert into nacl.
-        let coinbase = this.coinbase;
-        let parentHash = this.parentHash;
-        let version = this.version;
-        let timeStamp = this.timeStamp;
-
         let hash = '0';
         if (this.isValidHeaderData(blockData)) {
-            hash = Security.hash(coinbase + parentHash + version + timeStamp + blockData);
+            hash = Security.hash(this.coinbase + this.parentHash + this.version + this.timeStamp + blockData);
         }
 
         return hash;
