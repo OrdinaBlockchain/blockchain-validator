@@ -21,7 +21,7 @@ app.use(express.static(__dirname + '/public'));
 
 // Redirect default '/' call to main.htm page
 app.get('/', (req, res) => {
-    res.redirect('/main.htm');
+    res.redirect('/main.html');
 });
 
 // Start listening with HTTP (picks random available port)
@@ -61,8 +61,9 @@ io.on('connection', (socket) => {
  * @param {*} data
  */
 function setEnvironmentVariables(data) {
-    process.env.NODE_PORT = data.port;
     process.env.IS_BACKUP = data.isBackup;
+    process.env.NODE_HOST = data.host;
+    process.env.NODE_PORT = data.port;
 
     // Default is localhost for testing purposes
     if (data.backup1_host && data.backup1_host !== "") { process.env.BACKUP_1_HOST = data.backup1_host; } else { process.env.BACKUP_1_HOST = '127.0.0.1'; }

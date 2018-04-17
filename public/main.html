@@ -25,24 +25,28 @@
             <input type="checkbox" id="node-data-isbackup">
         </p>
         <p>
-            <label>Node Port:</label><br>
-            <input type="text" id="node-data-port" autofocus>
+            <label>Node Host:</label><br>
+            <input type="text" id="node-data-host" autofocus>
         </p>
         <p>
-            <label>1st Backup Port:</label><br>
-            <input type="text" id="node-data-backup1_port">
+            <label>Node Port:</label><br>
+            <input type="text" id="node-data-port" autofocus>
         </p>
         <p>
             <label>1st Backup Host:</label><br>
             <input type="text" id="node-data-backup1_host" placeholder="optional">
         </p>
         <p>
-            <label>2nd Backup Port:</label><br>
-            <input type="text" id="node-data-backup2_port">
+            <label>1st Backup Port:</label><br>
+            <input type="text" id="node-data-backup1_port">
         </p>
         <p>
             <label>2nd Backup Host:</label><br>
             <input type="text" id="node-data-backup2_host" placeholder="optional">
+        </p>
+        <p>
+            <label>2nd Backup Port:</label><br>
+            <input type="text" id="node-data-backup2_port">
         </p>
         <p class="submit">
             <input id="init-node-submit" , type="submit" value="Start Validator" />
@@ -106,16 +110,18 @@
 
             function submitNodeData(event) {
                 event.preventDefault();
-                const port = document.querySelector('#node-data-port').value;
                 const isBackup = document.querySelector('#node-data-isbackup').checked;
+                const host = document.querySelector('#node-data-host').value;
+                const port = document.querySelector('#node-data-port').value;
                 const backup1_port = document.querySelector('#node-data-backup1_port').value;
                 const backup1_host = document.querySelector('#node-data-backup1_host').value;
                 const backup2_port = document.querySelector('#node-data-backup2_port').value;
                 const backup2_host = document.querySelector('#node-data-backup2_host').value;
 
                 socket.emit('node-data', JSON.stringify({
-                    port: port,
                     isBackup: isBackup,
+                    host: host,
+                    port: port,
                     backup1_port: backup1_port,
                     backup1_host: backup1_host,
                     backup2_port: backup2_port,
