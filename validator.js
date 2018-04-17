@@ -9,6 +9,8 @@ const Messager = require('./util/messager');
 const opn = require('opn');
 const express = require('express');
 const http = require('http');
+const Security = require('./logic/security');
+
 let io = require('socket.io');
 
 let sender;
@@ -40,13 +42,7 @@ io = io.listen(server);
 io.on('connection', (socket) => {
     // Initialize logger for real-time webpage logging
     messager = new Messager(socket);
-    setEnvironmentVariables(JSON.parse(JSON.stringify({
-        isBackup: false,
-        host: '10.0.0.4',
-        backup1_host: '10.0.0.2',
-        backup2_host: null,
-        other_host: null,
-    })));
+
     initNode();
     socket.emit('node-initialized', JSON.stringify({
         id: node.id,
@@ -54,7 +50,6 @@ io.on('connection', (socket) => {
         isBackup: process.env.IS_BACKUP,
     }));
     socket.on('node-data', (data) => {
-        setEnvironmentVariables(JSON.parse(data.toString('utf8')));
         initNode();
         socket.emit('node-initialized', JSON.stringify({
             id: node.id,
@@ -72,9 +67,11 @@ io.on('connection', (socket) => {
     });
 
     socket.on('generate-keypair', (data) => {
+        let mnemonic = Security.generateMnemonic();
+        let keypair = { pubKey: pubKey, privKey: privKey } = Security.generateKeyPair(mnemonic); // eslint-disable-line no-undef
         socket.emit('keypair', JSON.stringify({
-            pubkey: node.id,
-            privkey: process.env.NODE_PORT,
+            pubkey: keypair.pubKey,
+            privkey: keypair.privKey,
         }));
     });
 
@@ -85,6 +82,9 @@ io.on('connection', (socket) => {
     });
 
     socket.on('generate-transaction-data', (data) => {
+
+
+
         socket.emit('transaction-generated', JSON.stringify({
             transaction: 'transaction',
         }));
@@ -96,27 +96,6 @@ io.on('connection', (socket) => {
         }));
     });
 });
-
-/**
- *
- * @param {*} data
- */
-function setEnvironmentVariables(data) {
-    process.env.IS_BACKUP = data.isBackup;
-    console.log(data.isBackup);
-    if (data.isBackup) {
-        process.env.NODE_HOST = data.host;
-        process.env.BACKUP_2_HOST = data.other_host;
-        PORT = 9178;
-        console.log('Is backup: %s : %s', process.env.NODE_HOST, process.env.BACKUP_2_HOST);
-    } else {
-        process.env.NODE_HOST = '10.0.0.4';
-        process.env.BACKUP_1_HOST = data.backup1_host;
-        process.env.BACKUP_2_HOST = data.backup2_host;
-        PORT = 9177;
-        console.log('Is not backup: %s : %s : %s', process.env.NODE_HOST, process.env.BACKUP_1_HOST, process.env.BACKUP_2_HOST);
-    }
-}
 
 /** */
 function initNode() {
