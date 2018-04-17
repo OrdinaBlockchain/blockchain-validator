@@ -43,10 +43,10 @@ io.on('connection', (socket) => {
         setEnvironmentVariables(JSON.parse(data.toString('utf8')));
         initNode();
         socket.emit('node-initialized', JSON.stringify({
-                id: node.id,
-                port: process.env.NODE_PORT,
-                isBackup: process.env.IS_BACKUP}
-            ));
+            id: node.id,
+            port: process.env.NODE_PORT,
+            isBackup: process.env.IS_BACKUP
+        }));
     });
     socket.on('broadcast-message', (data) => {
         if (sender) {
@@ -65,11 +65,11 @@ function setEnvironmentVariables(data) {
     process.env.IS_BACKUP = data.isBackup;
 
     // Default is localhost for testing purposes
-    process.env.BACKUP_1_HOST = '127.0.0.1';
+    if (data.backup1_host && data.backup1_host !== "") { process.env.BACKUP_1_HOST = data.backup1_host; } else { process.env.BACKUP_1_HOST = '127.0.0.1'; }
     process.env.BACKUP_1_PORT = data.backup1_port;
 
     // Default is localhost for testing purposes
-    process.env.BACKUP_2_HOST = '127.0.0.1';
+    if (data.backup2_host && data.backup2_host !== "") { process.env.BACKUP_2_HOST = data.backup1_host; } else { process.env.BACKUP_2_HOST = '127.0.0.1'; }
     process.env.BACKUP_2_PORT = data.backup2_port;
 }
 
