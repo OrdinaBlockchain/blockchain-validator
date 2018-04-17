@@ -17,9 +17,9 @@ class NodeProvider {
         if (process.env.IS_BACKUP === 'true') {
             node = smoke.createNode({
                 port: BACKUP_PORT,
-                address: smoke.localIp(process.env.NODE_HOST),
+                address: process.env.NODE_HOST,
                 seeds: [
-                    {port: BACKUP_PORT, address: process.env.BACKUP_2_HOST},
+                    { port: BACKUP_PORT, address: process.env.BACKUP_2_HOST },
                 ],
                 minPeerNo: 1,
                 maxPeerNo: 9999999,
@@ -28,10 +28,10 @@ class NodeProvider {
         } else {
             node = smoke.createNode({
                 port: PORT,
-                address: smoke.localIp(process.env.NODE_HOST),
+                address: process.env.NODE_HOST,
                 seeds: [
-                    {port: BACKUP_PORT, address: process.env.BACKUP_1_HOST},
-                    {port: BACKUP_PORT, address: process.env.BACKUP_2_HOST},
+                    { port: BACKUP_PORT, address: process.env.BACKUP_1_HOST },
+                    { port: BACKUP_PORT, address: process.env.BACKUP_2_HOST },
                 ],
                 minPeerNo: 1,
                 maxPeerNo: 4,
