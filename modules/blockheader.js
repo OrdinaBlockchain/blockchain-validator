@@ -29,12 +29,17 @@ class BlockHeader {
      * @return {string} hash
      */
     calculateBlockHash(blockData) {
-        let hash = '0';
-        if (this.isValidHeaderData(blockData)) {
-            hash = Security.hash(this.coinbase + this.parentHash + this.version + this.timestamp + blockData);
-        }
-
-        return hash;
+        return new Promise((resolve, reject) => {
+            if (this.isValidHeaderData(blockData)) {
+                Security.hash(this.coinbase + this.parentHash + this.version + this.timestamp + blockData).then((hash) => {
+                    resolve(hash);
+                }).catch((err) => {
+                    reject(err);
+                });
+            } else {
+                resolve('0');
+            }
+        });
     }
 
     /**

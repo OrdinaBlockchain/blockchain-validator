@@ -52,7 +52,14 @@ class Block {
      * Sets the header's blockHash.
      */
     calculateBlockHash() {
-        this.header.blockHash = this.header.calculateBlockHash(this.transactions);
+        return new Promise((resolve, reject) => {
+            this.header.calculateBlockHash(this.transactions).then((hash) => {
+                this.header.blockHash = hash;
+                resolve();
+            }).catch((err) => {
+                reject(err);
+            });
+        });
     }
 
     /**
@@ -61,7 +68,13 @@ class Block {
      * @return {boolean}
      */
     hasValidHeader() {
-        return this.header.blockHash === this.header.calculateBlockHash(this.transactions);
+        return new Promise((resolve, reject) => {
+            this.header.blockHash === this.header.calculateBlockHash(this.transactions).then((hash) => {
+                resolve(this.header.blockHash === hash);
+            }).catch((err) => {
+                reject(err);
+            });
+        });
     }
 
     /**

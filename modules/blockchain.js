@@ -83,10 +83,13 @@ class Blockchain {
      * @param {Block} block
      */
     addBlock(block) {
-        block.calculateBlockHash();
-        if (this.isValidBlock(block)) {
+        block.calculateBlockHash().then(() => {
+            return this.isValidBlock(block);
+        }).then((isValid) => {
             this.blocks.push(block);
-        }
+        }).catch((err) => {
+            console.log(err);
+        });
     }
 
     /**
