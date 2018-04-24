@@ -48,6 +48,7 @@ io.on('connection', (socket) => {
         port: PORT,
         isBackup: process.env.IS_BACKUP,
     }));
+
     socket.on('node-data', (data) => {
         initNode();
         messager.notify('node-initialized', JSON.stringify({
@@ -55,7 +56,7 @@ io.on('connection', (socket) => {
             port: PORT,
             isBackup: process.env.IS_BACKUP,
         }));
-    }
+    });
 
     socket.on('broadcast-message', (data) => {
         if (sender) {
