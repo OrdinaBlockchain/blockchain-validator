@@ -328,13 +328,13 @@
                 socket.emit('broadcast-chatmessage', JSON.stringify({
                     message: document.querySelector('#chatmessage').value
                 }));
-                document.querySelector('#chattotal').value += "You: " + document.querySelector('#chatmessage').value + "\n";
+                document.querySelector('#chattotal').value = "You: " + document.querySelector('#chatmessage').value + "\n" + document.querySelector('#chattotal').value;
                 document.querySelector('#chatmessage').value = "";
             }
         }
 
         function receiveMessage(sender, message) {
-            document.querySelector('#chattotal').value += sender + ": " + message + "\n";
+            document.querySelector('#chattotal').value = sender + ": " + message + "\n" + document.querySelector('#chattotal').value;
         }
 
         function generateKeypair() {
