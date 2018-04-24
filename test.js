@@ -14,16 +14,20 @@ const data = {
     timestamp: Date.now(),
 };
 
+process.setMaxListeners(0);
+
 Security.signDetached(data, privateKey).then((signature) => {
     data.signature = signature;
 
     let blockchain = new BlockChain(coinbase, 'v1.1');
 
-    let promises = [];
+    var promises = []
     for (let i = 0; i < 100; i++) {
         promises.push(blockchain.addTransaction(new Transaction(data)));
     }
+
     Promise.all(promises).then(() => {
+        console.log('here')
         console.log(blockchain.blocks.length);
         console.log(blockchain.getBalanceOf(coinbase));
         console.log(blockchain.getBalanceOf('fred'));

@@ -24,6 +24,7 @@ class Blockchain {
         };
 
         this.currentBlock = new Block(data);
+        this.count = 0;
     }
 
     /**
@@ -47,6 +48,7 @@ class Blockchain {
      */
     addTransaction(transaction) {
         return new Promise((resolve, reject) => {
+            console.log('here2');
             this.isValidTransaction(transaction).then((isValid) => {
                 if (isValid) {
                     this.currentBlock.addTransaction(transaction);
@@ -75,12 +77,13 @@ class Blockchain {
                         version: this.version,
                         parentHash: this.getLatestBlock().header.blockHash,
                     };
-
                     this.currentBlock = new Block(data);
                     resolve();
                 }).catch((err) => {
                     reject(err);
                 });
+            } else {
+                resolve();
             }
         });
     }
