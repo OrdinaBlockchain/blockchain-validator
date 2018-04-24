@@ -44,12 +44,41 @@
 
 							-->
                 <ul>
-                    <li><a href="#top" id="top-link" class="skel-layers-ignoreHref"><span class="icon fa-home">Home</span></a></li>
-                    <li><a href="#wallet" id="portfolio-link" class="skel-layers-ignoreHref"><span class="icon fa-th">Wallet</span></a></li>
-                    <li><a href="#transaction" id="about-link" class="skel-layers-ignoreHref"><span class="icon fa-user">Transaction</span></a></li>
-                    <li><a href="#chain" id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-envelope">Chain</span></a></li>
-                    <li><a href="#sign-transaction" id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-envelope">Sign Transaction</span></a></li>
-                    <li><a href="#logs" id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-envelope">Logs</span></a></li>
+                    <li>
+                        <a href="#top" id="top-link" class="skel-layers-ignoreHref">
+                            <span class="icon fa-home">Home</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#admin-wallet" id="portfolio-link" class="skel-layers-ignoreHref">
+                            <span class="icon fa-th">Admin Wallet</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#send-snowflakes" id="about-link" class="skel-layers-ignoreHref">
+                            <span class="icon fa-envelope">Send Snowflakes</span>
+                        </a>
+                    </li>
+                    <li>
+                            <a href="#send-frost" id="about-link" class="skel-layers-ignoreHref">
+                                <span class="icon fa-envelope">Send Snowflakes</span>
+                            </a>
+                        </li>
+                    <li>
+                        <a href="#chain" id="contact-link" class="skel-layers-ignoreHref">
+                            <span class="icon fa-link">Chain</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#sign-transaction" id="contact-link" class="skel-layers-ignoreHref">
+                            <span class="icon fa-key">Sign Transaction</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#logs" id="contact-link" class="skel-layers-ignoreHref">
+                            <span class="icon fa-terminal">Logs</span>
+                        </a>
+                    </li>
 
                 </ul>
             </nav>
@@ -58,9 +87,21 @@
         <div class="bottom">
             <!-- Social Icons -->
             <ul class="icons">
-                <li><a href="#" class="icon fa-twitter"><span class="label">Portal</span></a></li>
-                <li><a href="#" class="icon fa-facebook"><span class="label">Ordina</span></a></li>
-                <li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>
+                <li>
+                    <a href="#" class="icon fa-twitter">
+                        <span class="label">Portal</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="icon fa-facebook">
+                        <span class="label">Ordina</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="icon fa-github">
+                        <span class="label">Github</span>
+                    </a>
+                </li>
             </ul>
         </div>
 
@@ -72,45 +113,53 @@
         <section id="top" class="one dark cover">
             <div class="container">
                 <header>
-                    <h2 class="alt">Thanks for using the <strong>Ordina Blockchain</strong></h2>
+                    <h2 class="alt">Thanks for using the
+                        <strong>Ordina Blockchain</strong>
+                    </h2>
                 </header>
             </div>
         </section>
 
         <!-- Portfolio -->
-        <section id="wallet" class="two">
+        <section id="admin-wallet" class="two">
             <div class="container">
 
                 <header>
-                    <h2>Wallet</h2>
+                    <h2>Admin Wallet</h2>
                 </header>
 
-                <p>Here you can configure the wallet for which this validator will vouch</p>
-                <form method="post" action="#">
-                    <div class="row">
-                        <div class="12u$">
-                            <textarea name="public-key" placeholder="Public-Key"></textarea>
-                        </div>
-                        <div class="12u$">
-                            <input type="submit" value="Set Public-Key" />
-                        </div>
-                    </div>
-                </form>
+                <p>Here you can manage the Admin wallet</p>
+                <div align="left">
+                    <table>
+                        <tr>
+                            <td>Wallet Address:</td>
+                            <td id="genesis-address">SNOWABCDE</td>
+                        </tr>
+                        <tr>
+                            <td>Snowflakes:</td>
+                            <td id="genesis-balance">1234</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </section>
 
         <!-- About Me -->
-        <section id="transaction" class="three">
+        <section id="send-snowflakes" class="three">
             <div class="container">
 
                 <header>
-                    <h2>Transaction</h2>
+                    <h2>Send Snowflakes</h2>
                 </header>
-                <p>Set the public key and amount for the transaction you wish to make</p>
+                <p>Set the public key and amount for the <strong>Snowflake</strong> you wish to make</p>
                 <form method="post" action="#">
                     <div class="row">
-                        <div class="6u 12u$(mobile)"><input type="text" name="transaction-public-key" placeholder="Public-Key" /></div>
-                        <div class="6u$ 12u$(mobile)"><input type="text" name="transaction-amoun" placeholder="amount" /></div>
+                        <div class="6u 12u$(mobile)">
+                            <input type="text" name="transaction-public-key" placeholder="Public-Key" />
+                        </div>
+                        <div class="6u$ 12u$(mobile)">
+                            <input type="text" name="transaction-amoun" placeholder="amount" />
+                        </div>
                         <div class="12u$">
                             <input type="submit" value="Generate transaction" />
                         </div>
@@ -119,8 +168,31 @@
             </div>
         </section>
 
+        <section id="send-frost" class="four">
+                <div class="container">
+    
+                    <header>
+                        <h2>Send Frost</h2>
+                    </header>
+                    <p>Set the public key and amount for the <strong>Frost</strong> transaction you wish to make</p>
+                    <form method="post" action="#">
+                        <div class="row">
+                            <div class="6u 12u$(mobile)">
+                                <input type="text" name="transaction-public-key" placeholder="Public-Key" />
+                            </div>
+                            <div class="6u$ 12u$(mobile)">
+                                <input type="text" name="transaction-amoun" placeholder="amount" />
+                            </div>
+                            <div class="12u$">
+                                <input type="submit" value="Generate transaction" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
         <!-- Contact -->
-        <section id="chain" class="four">
+        <section id="chain" class="two">
             <div class="container">
 
                 <header>
@@ -131,8 +203,12 @@
 
                 <form method="post" action="#">
                     <div class="row">
-                        <div class="6u 12u$(mobile)"><input type="text" name="name" placeholder="Name" /></div>
-                        <div class="6u$ 12u$(mobile)"><input type="text" name="email" placeholder="Email" /></div>
+                        <div class="6u 12u$(mobile)">
+                            <input type="text" name="name" placeholder="Name" />
+                        </div>
+                        <div class="6u$ 12u$(mobile)">
+                            <input type="text" name="email" placeholder="Email" />
+                        </div>
                         <div class="12u$">
                             <textarea name="message" placeholder="Message"></textarea>
                         </div>
@@ -145,7 +221,7 @@
             </div>
         </section>
 
-        <section id="sign-transaction" class="two">
+        <section id="sign-transaction" class="three">
             <div class="container">
 
                 <header>
@@ -157,7 +233,9 @@
                         <div class="12u$">
                             <textarea name="transaction-data" placeholder="Transaction-data"></textarea>
                         </div>
-                        <div class="6u 12u$(mobile)"><input type="password" name="private-key" placeholder="Private-Key" /></div>
+                        <div class="6u 12u$(mobile)">
+                            <input type="password" name="private-key" placeholder="Private-Key" />
+                        </div>
                         <div class="12u$">
                             <input type="submit" value="Sign Transaction" />
                         </div>
@@ -166,7 +244,7 @@
             </div>
         </section>
 
-        <section id="logs" class="three">
+        <section id="logs" class="four">
             <div class="container">
 
                 <header>
@@ -188,7 +266,9 @@
         <!-- Copyright -->
         <ul class="copyright">
             <li>&copy; Untitled. All rights reserved.</li>
-            <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+            <li>Design:
+                <a href="http://html5up.net">HTML5 UP</a>
+            </li>
         </ul>
 
     </div>
