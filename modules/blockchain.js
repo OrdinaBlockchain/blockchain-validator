@@ -46,22 +46,27 @@ class Blockchain {
      * @param {Transaction} transaction
      */
     addTransaction(transaction) {
-        if (this.isValidTransaction(transaction)) {
-            this.currentBlock.addTransaction(transaction);
-        }
+        return new Promise((reject, resolve) => {
+            if (this.isValidTransaction(transaction)) {
+                this.currentBlock.addTransaction(transaction);
+            }
+            // TODO remove when other block limit is implemented
+            if (this.currentBlock.transactions.length > 9) {
+                this.addBlock(this.currentBlock).then(() => {
+                    let data = {
+                        constructorVersion: 1,
+                        coinbase: this.coinbase,
+                        version: this.version,
+                        parentHash: this.getLatestBlock().header.blockHash,
+                    };
 
-        // TODO remove when other block limit is implemented
-        if (this.currentBlock.transactions.length > 9) {
-            this.addBlock(this.currentBlock);
-            let data = {
-                constructorVersion: 1,
-                coinbase: this.coinbase,
-                version: this.version,
-                parentHash: this.getLatestBlock().header.blockHash,
-            };
-
-            this.currentBlock = new Block(data);
-        }
+                    this.currentBlock = new Block(data);
+                    resolve();
+                }).catch((err) => {
+                    reject(err);
+                });
+            }
+        });
     }
 
     /**
@@ -83,12 +88,15 @@ class Blockchain {
      * @param {Block} block
      */
     addBlock(block) {
-        block.calculateBlockHash().then(() => {
-            return this.isValidBlock(block);
-        }).then((isValid) => {
-            this.blocks.push(block);
-        }).catch((err) => {
-            console.log(err);
+        return new Promise((resolve, reject) => {
+            block.calculateBlockHash().then(() => {
+                return this.isValidBlock(block);
+            }).then((isValid) => {
+                this.blocks.push(block);
+                resolve();
+            }).catch((err) => {
+                reject(err);
+            });
         });
     }
 
