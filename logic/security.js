@@ -101,9 +101,17 @@ class Security {
         let signPubKey = this.hexStringToByteArray(pubKey);
         let signatureBin = this.hexStringToByteArray(signature);
 
+        // extract data from message without the signature.
+        let data = {
+            senderpubkey: message.senderpubkey,
+            receiveraddress: message.receiveraddress,
+            amount: message.amount,
+            timestamp: message.timestamp,
+        };
+
         naclFactory.instantiate((nacl) => {
             // Convert message to bytestring
-            const msgBytes = this.messageToBytes(message);
+            const msgBytes = this.messageToBytes(JSON.stringify(data));
 
             // Decode message from packet with public key
             result = nacl.crypto_sign_verify_detached(signatureBin, msgBytes, signPubKey);

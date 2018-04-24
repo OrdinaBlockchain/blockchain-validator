@@ -15,6 +15,7 @@ class Transaction {
         this.timestamp = data.timestamp;
         // TODO add nonce integer increasing by 1 for each added Transaction.
 
+        this.data = data;
         this.signature = data.signature;
     }
 
