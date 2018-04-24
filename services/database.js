@@ -7,70 +7,65 @@ const databasePath = './myDB';
 let db;
 
 class Database {
-
     constructor() {
         open();
     }
 
     static open() {
-        this.db = level(databasePath, { createIfMissing: false }, function (err, db) {
+        this.db = level(databasePath, {createIfMissing: false}, function(err, db) {
             if (err && verbose) console.log(err);
         });
     }
 
     static close() {
-        this.db.close(function (err) {
+        this.db.close(function(err) {
             if (err && verbose) console.log(err);
         });
     }
 
     /**
-     * 
-     * @param {*} key 
-     * @param {*} value 
+     *
+     * @param {*} key
+     * @param {*} value
      */
     static put(key, value) {
-        db.put(key, value, function (err) {
-            if (err && verbose) console.log('Unable to put ' + value + 'into the database.', err) // some kind of I/O error            
+        db.put(key, value, function(err) {
+            if (err && verbose) console.log('Unable to put ' + value + 'into the database.', err); // some kind of I/O error
         });
     }
 
     /**
-     * 
-     * @param {*} key 
+     *
+     * @param {*} key
      * @return {*} value
      */
     static get(key) {
-        db.get(key, function (err, value) {
+        db.get(key, function(err, value) {
             if (err && verbose) return console.log(key + ' has no matches');
             if (value) return value;
-        })
+        });
     }
 
     /**
-     * 
-     * @param {*} key 
+     *
+     * @param {*} key
      */
     static delete(key) {
-        db.del(key, function (err) {
+        db.del(key, function(err) {
             if (err && verbose) console.log(err);
         });
     }
 
     /**
-     * 
+     *
      * @param {*} ops {type: 'put/del', key:'key', value:'value'}
      */
     static batch(ops) {
-        db.batch(ops, function (err) {
-            if (err && verbose) console.log(err)
-        })
+        db.batch(ops, function(err) {
+            if (err && verbose) console.log(err);
+        });
     }
-
 }
-
-
-
 
 
 // 3) Fetch by key

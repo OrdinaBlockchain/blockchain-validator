@@ -90,13 +90,7 @@ class Receiver {
      * @param {*} data
      */
     onNewTransaction(data) {
-        new Blockchain().addTransaction(data.transactionData);
-        const transaction = new Transaction(data.transactionData);
-        if (transaction.verifySignature()) {
-
-        } else {
-            this.messager.log('Invalid transaction signature');
-        }
+        new Blockchain('empty', 'empty').addTransaction(data.transactionData);
     }
 }
 
