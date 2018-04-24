@@ -58,7 +58,8 @@ Receiver.prototype.initCustomListeners = function() {
             this.onNewTransaction(message.data);
         } else if (message.context === 'message') {
             this.messager.notify('chatmessage', JSON.stringify({
-                message: message.data.message,
+                message: message.data.message.message,
+                sender: message.data.message.sender,
             }));
             this.messager.log(message.source.id + ' has given you a new transaction');
             this.onNewTransaction(message.data);
