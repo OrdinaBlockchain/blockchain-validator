@@ -30,7 +30,13 @@ class Transaction {
      * @return {*}
      */
     verifySignature() {
-        return Security.verifyDetached(this.data, this.signature, this.senderpubkey);
+        return new Promise((resolve, reject) => {
+            Security.verifyDetached(this.data, this.signature, this.senderpubkey).then((isValid) => {
+                resolve(isValid);
+            }).catch((err) => {
+                reject(err);
+            });
+        });
     }
 }
 

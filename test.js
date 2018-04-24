@@ -29,5 +29,7 @@ Security.signDetached(data, privateKey).then((signature) => {
         console.log(blockchain.getBalanceOf('fred'));
         console.log(JSON.stringify(blockchain));
         console.log(blockchain.isValid());
+    }).catch((err) => {
+        console.log(err);
     });
 });

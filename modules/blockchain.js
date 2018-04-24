@@ -46,11 +46,32 @@ class Blockchain {
      * @param {Transaction} transaction
      */
     addTransaction(transaction) {
-        return new Promise((reject, resolve) => {
-            if (this.isValidTransaction(transaction)) {
-                this.currentBlock.addTransaction(transaction);
-            }
+        return new Promise((resolve, reject) => {
+            this.isValidTransaction(transaction).then((isValid) => {
+                if (isValid) {
+                    this.currentBlock.addTransaction(transaction).then(() => {
+                        return this.limitLength();
+                    }).then(() => {
+                        resolve();
+                    });
+                } else {
+                    return this.limitLength();
+                }
+            }).then(() => {
+                resolve();
+            }).catch((err) => {
+                reject(err);
+            });
             // TODO remove when other block limit is implemented
+        });
+    }
+
+    /**
+     * [limitLength description]
+     * @return {[type]} [description]
+     */
+    limitLength() {
+        return new Promise((resolve, reject) => {
             if (this.currentBlock.transactions.length > 9) {
                 this.addBlock(this.currentBlock).then(() => {
                     let data = {
@@ -75,12 +96,18 @@ class Blockchain {
      * @return {boolean}
      */
     isValidTransaction(transaction) {
-        // TODO check if address is a correct addressb
-        if (this.validateTransactionFormat(transaction) && transaction.verifySignature()) {
-            return this.getBalanceOf(transaction.senderpubkey) >= transaction.amount;
-        }
+        return new Promise((resolve, reject) => {
+            // TODO check if address is a correct addressb
+            transaction.verifySignature().then((isValid) => {
+                if (this.validateTransactionFormat(transaction) && isValid) {
+                    resolve(this.getBalanceOf(transaction.senderpubkey) >= transaction.amount);
+                }
 
-        return false;
+                resolve(false);
+            }).catch((err) => {
+                reject(err);
+            });
+        });
     }
 
     /**
