@@ -39,14 +39,14 @@ async.series([
         rl.question('Write signed to file', function (args) {
             let transactionJson = JSON.parse(json);
 
-            let message = transactionJson._senderpubkey + transactionJson._receiveraddress + transactionJson._amount + transactionJson._timestamp
+            let message = transactionJson.senderpubkey + transactionJson.receiveraddress + transactionJson.amount + transactionJson.timestamp
             let signature = security.signDetached(message, privKey1);
 
             let data = {
-                senderpubkey: transactionJson._senderpubkey,
-                receiveraddress: transactionJson._receiveraddress,
-                amount: transactionJson._amount,
-                timestamp: transactionJson._timestamp,
+                senderpubkey: transactionJson.senderpubkey,
+                receiveraddress: transactionJson.receiveraddress,
+                amount: transactionJson.amount,
+                timestamp: transactionJson.timestamp,
                 signature: signature,
             };
             let jsonSigned = JSON.stringify(new Transaction(data));
