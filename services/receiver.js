@@ -13,6 +13,7 @@ class Receiver {
         this.node = node;
         this.messager = messager;
         this.peers = [];
+        this.blockchain = new Blockchain("c4382b76386e73a8a37aff842fbfc1a02fd2b1f2eda74805911ac0505a69062d", "v1.0");
 
         this.initDefaultListeners();
         this.initCustomListeners();
@@ -20,7 +21,7 @@ class Receiver {
 
     /**
      * Initialize default listeners that listen to network messages
-    */
+     */
     initDefaultListeners() {
         this.node.on('connect', () => {
             this.messager.notify('node-connected');
@@ -43,7 +44,7 @@ class Receiver {
 
     /**
      * Initialize custom listeners that listen to network messages
-    */
+     */
     initCustomListeners() {
         process.stdin.pipe(this.node.broadcast).on('data', (chunk) => {
             const message = JSON.parse(chunk.toString('utf8'));
@@ -90,7 +91,10 @@ class Receiver {
      * @param {*} data
      */
     onNewTransaction(data) {
+        new Blockchain().addTransaction(data.transactionData);
         new Blockchain('empty', 'empty').addTransaction(data.transactionData);
+        const transaction = new Transaction(data.transactionData);
+
     }
 }
 

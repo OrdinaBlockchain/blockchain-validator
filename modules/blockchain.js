@@ -72,7 +72,6 @@ class Blockchain {
     isValidTransaction(transaction) {
         // TODO check if address is a correct addressb
         if (this.validateTransactionFormat(transaction) && transaction.verifySignature()) {
-        // if (this.validateTransactionFormat(transaction)) {
             return this.getBalanceOf(transaction.senderpubkey) >= transaction.amount;
         }
 
