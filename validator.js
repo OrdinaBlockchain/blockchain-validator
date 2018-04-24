@@ -71,7 +71,10 @@ io.on('connection', (socket) => {
 
     socket.on('broadcast-chatmessage', (data) => {
         if (sender) {
-            sender.broadcastMessage(JSON.parse(data.toString('utf8')).message);
+            let message = JSON.parse(data.toString('utf8')).message;
+            let sendername = node.id;
+            let broadcastMessage = { 'message': message, 'sender': sendername };
+            sender.broadcastMessage(broadcastMessage);
         }
     });
     socket.on('generate-keypair', (data) => {
