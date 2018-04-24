@@ -19,17 +19,15 @@ Security.signDetached(data, privateKey).then((signature) => {
 
     let blockchain = new BlockChain(coinbase, 'v1.1');
 
+    let promises = [];
     for (let i = 0; i < 100; i++) {
-        blockchain.addTransaction(new Transaction(data));
+        promises.push(blockchain.addTransaction(new Transaction(data)));
     }
-
-    console.log(blockchain.blocks.length)
-    console.log(blockchain.getBalanceOf(coinbase));
-    console.log(blockchain.getBalanceOf('fred'));
-    console.log(JSON.stringify(blockchain));
-    console.log(blockchain.isValid());
-
+    Promise.all(promises).then(() => {
+        console.log(blockchain.blocks.length);
+        console.log(blockchain.getBalanceOf(coinbase));
+        console.log(blockchain.getBalanceOf('fred'));
+        console.log(JSON.stringify(blockchain));
+        console.log(blockchain.isValid());
+    });
 });
-
-
-
