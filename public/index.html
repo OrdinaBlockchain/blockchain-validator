@@ -46,11 +46,12 @@
                 <ul>
                     <li><a href="#top" id="top-link" class="skel-layers-ignoreHref"><span class="icon fa-home">Home</span></a></li>
                     <li><a href="#wallet" id="portfolio-link" class="skel-layers-ignoreHref"><span class="icon fa-th">Wallet</span></a></li>
-                    <li><a href="#transaction" id="about-link" class="skel-layers-ignoreHref"><span class="icon fa-envelope">Transaction</span></a></li>
-                    <li><a href="#chain" id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-link">Chain</span></a></li>
-                    <li><a href="#sign-transaction" id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-key">Sign Transaction</span></a></li>
-                    <li><a href="#logs" id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-terminal">Logs</span></a></li>
-                    <li><a href="#keygen" id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-key">Keygen</span></a></li>
+                    <li><a href="#transaction" id="transaction-link" class="skel-layers-ignoreHref"><span class="icon fa-envelope">Transaction</span></a></li>
+                    <li><a href="#chain" id="chain-link" class="skel-layers-ignoreHref"><span class="icon fa-link">Chain</span></a></li>
+                    <li><a href="#sign-transaction" id="sign-link" class="skel-layers-ignoreHref"><span class="icon fa-key">Sign Transaction</span></a></li>
+                    <li><a href="#logs" id="logs-link" class="skel-layers-ignoreHref"><span class="icon fa-terminal">Logs</span></a></li>
+                    <li><a href="#keygen" id="keygen-link" class="skel-layers-ignoreHref"><span class="icon fa-key">Keygen</span></a></li>
+                    <li><a href="#chat" id="chat-link" class="skel-layers-ignoreHref"><span class="icon fa-envelope">Chat</span></a></li>
 
 
                 </ul>
@@ -180,6 +181,24 @@
                 </div>
             </div>
         </section>
+        <section id="chat" class="two">
+            <div class="container">
+                <header>
+                    <h2>Chat</h2>
+                </header>
+                <form name="chatform" id="chatform">
+                    <div class="row">
+                        <div class="12u$">
+                            <textarea name="chattotal" id="chattotal" placeholder="No messages yet"></textarea>
+                        </div>
+                        <div class="12u"><input type="text" name="chatmessage" id="chatmessage" placeholder="Message...." /></div>
+                        <div class="12u$">
+                            <input type="submit" value="Post Message" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
         <section id="logs" class="three">
             <div class="container">
 
@@ -217,6 +236,12 @@
     <script src="assets/js/main.js"></script>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript">
+        $(document).ready(function() {
+            $('#chatform').on('submit', function(e) {
+                e.preventDefault();
+                postMessage();
+            });
+        });
         console.log("Trying to connect");
         const socket = io.connect();
         socket.on('connect', () => {
@@ -249,6 +274,13 @@
             socket.on('keypair', (data) => {
                 document.getElementById('keypair').innerText = data.pubkey + ", " + data.privkey;
             });
+
+            socket.on('chatmessage', (data) => {
+                var message = JSON.parse(data).message;
+                receiveMessage(message);
+
+            });
+
 
 
             // const initNodeForm = document.querySelector('#init-node-form');
@@ -290,6 +322,20 @@
                 }));
             }
         });
+
+        function postMessage() {
+            if (document.querySelector('#chatmessage').value !== "") {
+                socket.emit('broadcast-chatmessage', JSON.stringify({
+                    message: document.querySelector('#chatmessage').value
+                }));
+                document.querySelector('#chattotal').value += document.querySelector('#chatmessage').value + "\\\n";
+                document.querySelector('#chatmessage').value = "";
+            }
+        }
+
+        function receiveMessage(message) {
+            document.querySelector('#chattotal').value += message + "\\\n";
+        }
 
         function generateKeypair() {
             socket.emit('generate-keypair');

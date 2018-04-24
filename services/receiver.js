@@ -41,9 +41,9 @@ Receiver.prototype.initDefaultListeners = function() {
     });
 };
 
-    /**
-     * Initialize custom listeners that listen to network messages
-     */
+/**
+ * Initialize custom listeners that listen to network messages
+ */
 Receiver.prototype.initCustomListeners = function() {
     process.stdin.pipe(this.node.broadcast).on('data', (chunk) => {
         const message = JSON.parse(chunk.toString('utf8'));
@@ -56,14 +56,20 @@ Receiver.prototype.initCustomListeners = function() {
         } else if (message.context === 'new_transaction') {
             this.messager.log(message.source.id + ' has given you a new transaction');
             this.onNewTransaction(message.data);
+        } else if (message.context === 'message') {
+            this.messager.notify('chatmessage', JSON.stringify({
+                message: message.data.message,
+            }));
+            this.messager.log(message.source.id + ' has given you a new transaction');
+            this.onNewTransaction(message.data);
         }
     });
 };
 
-    /**
-     *
-     * @param {json} data
-     */
+/**
+ *
+ * @param {json} data
+ */
 Receiver.prototype.onPeerRequest = function(data) {
     let peers = [];
     this.node.peers.list.forEach((peer) => {
@@ -75,19 +81,19 @@ Receiver.prototype.onPeerRequest = function(data) {
     this.sender.sendPeers(peers, data.recipientId);
 };
 
-    /**
-     *
-     * @param {json} data
-     */
+/**
+ *
+ * @param {json} data
+ */
 Receiver.prototype.onPeerReply = function(data) {
     // To Do (optional)
     this.peers = data.peers;
 };
 
-    /**
-     *
-     * @param {json} data
-     */
+/**
+ *
+ * @param {json} data
+ */
 Receiver.prototype.onNewTransaction = function(data) {
     new Blockchain().addTransaction(data.transactionData);
     new Blockchain('empty', 'empty').addTransaction(data.transactionData);
