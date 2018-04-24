@@ -9,26 +9,28 @@ class Transaction {
      * @param {*} data
      */
     constructor(data) {
-        this._senderpubkey = data.senderpubkey;
-        this._receiveraddress = data.receiveraddress;
-        this._amount = data.amount;
-        this._timestamp = data.timestamp;
+        this.senderpubkey = data.senderpubkey;
+        this.receiveraddress = data.receiveraddress;
+        this.amount = data.amount;
+        this.timestamp = data.timestamp;
+        // TODO add nonce integer increasing by 1 for each added Transaction.
 
-        this._signature = data.signature;
+        this.data = data;
+        this.signature = data.signature;
     }
 
     /**
      * @return {*}
      */
     getTimeStamp() {
-        return this._timestamp;
+        return this.timestamp;
     }
 
     /**
      * @return {*}
      */
     verifySignature() {
-        return Security.verifyDetached(this._data, this._signature, this._senderpubkey);
+        return Security.verifyDetached(this.data, this.signature, this.senderpubkey);
     }
 }
 

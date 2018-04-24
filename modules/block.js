@@ -82,13 +82,13 @@ class Block {
             let currentTransaction = this.transactions[j];
 
             // Check incoming balance.
-            if (currentTransaction._receiveraddress === address) {
-                balance += currentTransaction._amount;
+            if (currentTransaction.receiveraddress === address) {
+                balance += currentTransaction.amount;
             }
 
             // Check outgoing balance.
-            if (currentTransaction._senderpubkey === address) {
-                balance -= currentTransaction._amount;
+            if (currentTransaction.senderpubkey === address) {
+                balance -= currentTransaction.amount;
             }
         }
 
