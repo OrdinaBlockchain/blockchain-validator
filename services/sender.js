@@ -44,9 +44,6 @@ class Sender {
         const message = new Message(this.node, 'new_transaction', {
             transactionData: transaction,
         });
-        // const message = new Message(this.node, 'new_transaction', {
-        //     transactionData: transaction.data,
-        // });
         this.node.broadcast.write(JSON.stringify(message));
     }
 }
