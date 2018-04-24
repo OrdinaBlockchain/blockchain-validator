@@ -41,8 +41,11 @@ io = io.listen(server);
 
 io.on('connection', (socket) => {
     // Initialize logger for real-time webpage logging
-    messager = new Messager(socket);
-    initNode();
+    if (!connected) {
+        messager = new Messager(socket);
+        initNode();
+    }
+
     socket.emit('node-initialized', JSON.stringify({
         id: node.id,
         port: PORT,
@@ -65,6 +68,12 @@ io.on('connection', (socket) => {
         }
     });
 
+
+    socket.on('broadcast-chatmessage', (data) => {
+        if (sender) {
+            sender.broadcastMessage(JSON.parse(data.toString('utf8')).message);
+        }
+    });
     socket.on('generate-keypair', (data) => {
         let mnemonic = Security.generateMnemonic();
         let keypair = Security.generateKeyPair(mnemonic);

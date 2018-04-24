@@ -44,4 +44,12 @@ Sender.prototype.broadcastTransaction = async function(transaction) {
     this.node.broadcast.write(JSON.stringify(message));
 };
 
+Sender.prototype.broadcastMessage = async function(messageparam) {
+    // For testing purposes
+    const message = new Message(this.node, 'message', {
+        message: messageparam,
+    });
+    this.node.broadcast.write(JSON.stringify(message));
+};
+
 module.exports = Sender;
