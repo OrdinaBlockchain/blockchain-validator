@@ -1,36 +1,36 @@
 const bip39 = require('bip39');
 const naclFactory = require('js-nacl');
+
+// For debugging (true = debug-mode, false=no debug)
 const verbose = true;
 
 /**
- *
+ * [Security description]
  */
 class Security {
     /**
-     *
+     * [constructor description]
      */
     constructor() { }
 
     /**
-     *
-     * @param {*} message
-     * @param {*} privKey
-     * @return {*}
+     * [sign description]
+     * @param  {[type]} message    [description]
+     * @param  {[type]} privateKey [description]
+     * @return {[type]}            [description]
      */
-    static sign(message, privKey) {
-        let signatureBin;
-        let signPrivKey = this.hexStringToByteArray(privKey);
+    static sign(message, privateKey) {
+        return new Promise((resolve, reject) => {
+            naclFactory.instantiate((nacl) => {
+                // Convert message to bytestring
+                const messagBytes = this.messageToBytes(message);
 
-        naclFactory.instantiate((nacl) => {
-            // Convert message to bytestring
-            const msgBytes = this.messageToBytes(message);
-
-            // Sign message and package up into packet
-            signatureBin = nacl.crypto_sign(msgBytes, signPrivKey);
-            this.debug('Signature:           ' + nacl.to_hex(signatureBin));
+                // Sign message and package up into packet
+                const signatureBin = nacl.crypto_sign(messagBytes, this.hexStringToByteArray(privateKey));
+                this.debug('Signature: ' + nacl.to_hex(signatureBin));
+                resolve(signatureBin);
+            });
         });
-
-        return signatureBin;
     }
 
     /**
