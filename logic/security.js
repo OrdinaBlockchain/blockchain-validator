@@ -1,6 +1,5 @@
 const bip39 = require('bip39');
 const naclFactory = require('js-nacl');
-const util = require('util');
 
 // For debugging (true = debug-mode, false=no debug)
 const verbose = true;
@@ -16,29 +15,31 @@ class Security {
      * @return {[Promise]}            [description]
      */
     static sign(message, privateKey) {
-        if (!message | !privateKey) throw new Error('invalid message');
         return new Promise((resolve, reject) => {
-            naclFactory.instantiate((nacl) => {
-                try {
-                    // Convert and ensure data 
-                    const data = this.createData(message);
+            if (!message || !privateKey) {
+                throw new Error('invalid message');
+            } else {
+                naclFactory.instantiate((nacl) => {
+                    try {
+                        // Convert and ensure data
+                        const data = this.createData(message);
 
-                    // Convert data to bytestring
-                    const messagBytes = this.messageToBytes(data);
+                        // Convert data to bytestring
+                        const messagBytes = this.messageToBytes(data);
 
-                    // Sign message and package up into packet
-                    const signatureBin = nacl.crypto_sign(messagBytes, this.hexToBytes(privateKey));
-                    const signature = nacl.to_hex(signatureBin);
+                        // Sign message and package up into packet
+                        const signatureBin = nacl.crypto_sign(messagBytes, this.hexToBytes(privateKey));
+                        const signature = nacl.to_hex(signatureBin);
 
-                    this.debug(`Signature: ${signature}`);
+                        this.debug(`Signature: ${signature}`);
 
-                    resolve(signature);
-                } catch (err) {
-                    reject(err);
-                }
-            });
+                        resolve(signature);
+                    } catch (err) {
+                        reject(err);
+                    }
+                });
+            }
         });
-
     }
 
     /**
@@ -48,26 +49,29 @@ class Security {
      * @return {[Promise]}            [description]
      */
     static signDetached(message, privateKey) {
-        if (!message | !privateKey) throw new Error('invalid message');
         return new Promise((resolve, reject) => {
-            naclFactory.instantiate((nacl) => {
-                try {
-                    // Convert and ensure data 
-                    const data = this.createData(message);
+            if (!message | !privateKey) {
+                reject(new Error('invalid message'));
+            } else {
+                naclFactory.instantiate((nacl) => {
+                    try {
+                        // Convert and ensure data
+                        const data = this.createData(message);
 
-                    // Convert message to bytestring
-                    const messageBytes = this.messageToBytes(JSON.stringify(data));
+                        // Convert message to bytestring
+                        const messageBytes = this.messageToBytes(JSON.stringify(data));
 
-                    // Sign message and package up into packet
-                    const detachedSignatureBin = nacl.crypto_sign_detached(messageBytes, this.hexToBytes(privateKey));
-                    const detachedSignature = nacl.to_hex(detachedSignatureBin);
-                    this.debug(`Signature: ${detachedSignature}`);
+                        // Sign message and package up into packet
+                        const detachedSignatureBin = nacl.crypto_sign_detached(messageBytes, this.hexToBytes(privateKey));
+                        const detachedSignature = nacl.to_hex(detachedSignatureBin);
+                        this.debug(`Signature: ${detachedSignature}`);
 
-                    resolve(detachedSignature);
-                } catch (err) {
-                    reject(err);
-                }
-            });
+                        resolve(detachedSignature);
+                    } catch (err) {
+                        reject(err);
+                    }
+                });
+            }
         });
     }
 
@@ -87,30 +91,26 @@ class Security {
      * @return {string} message
      */
     static verify(signature, pubKey) {
-        if (!signature | !pubKey) throw new Error('invalid message');
         return new Promise((resolve, reject) => {
-
-            let message = '';
-            let signPubKey = this.hexToBytes(pubKey);
-            let signatureBin = this.hexToBytes(this.signature);
-
-            naclFactory.instantiate((nacl) => {
-                try {
+            if (!signature | !pubKey) {
+                reject(new Error('invalid message'));
+            } else {
+                naclFactory.instantiate((nacl) => {
+                    const publicKeyBytes = this.hexToBytes(pubKey);
+                    const signatureBin = this.hexToBytes(this.signature);
                     // Decode message from packet with public key
-                    let hexString = nacl.to_hex(nacl.crypto_sign_open(signatureBin, signPubKey)).toString();
+                    const hexString = nacl.to_hex(nacl.crypto_sign_open(signatureBin, publicKeyBytes)).toString();
 
                     // Convert hex to string
+                    let message = '';
                     for (let i = 0; i < hexString.length; i += 2) {
                         message += String.fromCharCode(parseInt(hexString.substr(i, 2), 16));
                     }
                     this.debug(`Message: ${message}`);
                     resolve(message);
-                } catch (err) {
-                    reject(err);
-                }
-            });
+                });
+            }
         });
-
     }
 
     /**
@@ -121,28 +121,27 @@ class Security {
      * @return {*} result
      */
     static verifyDetached(message, signature, pubKey) {
-        if (!message | !signature | !pubKey) throw new Error('invalid message');
         return new Promise((resolve, reject) => {
-            let signPubKey = this.hexToBytes(pubKey);
-            let signatureBin = this.hexToBytes(signature);
-
-            // extract data from message without the signature.
-            let data = this.createData(message);
-
-            naclFactory.instantiate((nacl) => {
-                try {
-                    // Convert message to bytestring
-                    const msgBytes = this.messageToBytes(JSON.stringify(data));
-
-                    // Decode message from packet with public key
-                    let result = nacl.crypto_sign_verify_detached(signatureBin, msgBytes, signPubKey);
-
-                    this.debug(`Result: ${result}`);
-                    resolve(result);
-                } catch (err) {
-                    reject(err);
-                }
-            });
+            if (!message | !signature | !pubKey) {
+                reject(new Error('invalid message'));
+            } else {
+                naclFactory.instantiate((nacl) => {
+                    const signPubKey = this.hexToBytes(pubKey);
+                    const signatureBin = this.hexToBytes(signature);
+                    // extract data from message without the signature.
+                    const data = this.createData(message);
+                    try {
+                        // Convert message to bytestring
+                        const msgBytes = this.messageToBytes(JSON.stringify(data));
+                        // Decode message from packet with public key
+                        const result = nacl.crypto_sign_verify_detached(signatureBin, msgBytes, signPubKey);
+                        this.debug(`Result: ${result}`);
+                        resolve(result);
+                    } catch (err) {
+                        reject(err);
+                    }
+                });
+            }
         });
     }
 
@@ -150,13 +149,11 @@ class Security {
      * @return {string} mnemonicString
      */
     static generateMnemonic() {
-        return new Promise((resolve, reject) => {
-            //Generate random new keypair
-            let mnemonic = bip39.generateMnemonic(); ///Maybe add seed or other wordlist to generating
+        // Generate random new keypair
+        const mnemonic = bip39.generateMnemonic(); // /Maybe add seed or other wordlist to generating
+        this.debug(`Mnemonic: ${mnemonic}`);
 
-            this.debug(`Mnemonic: ${mnemonic}`);
-            resolve(mnemonic);
-        });
+        return mnemonic;
     }
 
     /**
@@ -165,24 +162,22 @@ class Security {
      * @return {*} keypair
      */
     static generateKeyPair(mnemonic) {
-        if (!mnemonic) throw new Error('invalid message');
         return new Promise((resolve, reject) => {
-            naclFactory.instantiate(function (nacl) {
-                try {
+            if (!mnemonic) {
+                reject(new Error('invalid message'));
+            } else {
+                naclFactory.instantiate((nacl) => {
                     // Generate private(signSk) and public(signPk) key
-                    let { signPk, signSk } = nacl.crypto_sign_seed_keypair(bip39.mnemonicToEntropy(mnemonic));
-
-                    let pubKey = nacl.to_hex(signPk);
-                    let privKey = nacl.to_hex(signSk);
+                    const {signPk, signSk} = nacl.crypto_sign_seed_keypair(bip39.mnemonicToEntropy(mnemonic));
+                    const pubKey = nacl.to_hex(signPk);
+                    const privKey = nacl.to_hex(signSk);
 
                     this.debug(`Public Key: ${pubKey}`);
                     this.debug(`Private Key: ${privKey}`);
 
-                    resolve({ pubKey, privKey });
-                } catch (err) {
-                    reject(err);
-                }
-            });
+                    resolve({pubKey, privKey});
+                });
+            }
         });
     }
 
@@ -192,27 +187,24 @@ class Security {
      * @return {string} address
      */
     static generateAddress(pubKey) {
-        if (!pubKey) throw new Error('invalid message');
         return new Promise((resolve, reject) => {
-            let signPubKey = this.hexToBytes(pubKey);
-
-            naclFactory.instantiate((nacl) => {
-                try {
-
+            if (!pubKey) {
+                reject(new Error('invalid message'));
+            } else {
+                naclFactory.instantiate((nacl) => {
+                    const signPubKey = this.hexToBytes(pubKey);
                     // Hash public key, take first 8 bytes
-                    let hash = Buffer.from(nacl.crypto_hash_sha256(nacl.crypto_hash_sha256(signPubKey)))
+                    const hash = Buffer.from(nacl.crypto_hash_sha256(nacl.crypto_hash_sha256(signPubKey)))
                         .slice(0, 11);
 
                     // Start with SNOW followed by the hex of the bytes
-                    let address = 'SNOW' + nacl.to_hex(hash);
+                    const address = `SNOW ${nacl.to_hex(hash)}`;
 
                     this.debug(`Address: ${address}`);
 
                     resolve(address);
-                } catch (err) {
-                    reject(err);
-                }
-            });
+                });
+            }
         });
     }
 
@@ -247,14 +239,17 @@ class Security {
      * @return {*} hash
      */
     static hash(toHash) {
-        if(!toHash) throw new Error('invalid message'); 
         return new Promise((resolve, reject) => {
-            naclFactory.instantiate((nacl) => {
-                // Hash public key, take first 11 bytes
-                let hash = nacl.to_hex(nacl.crypto_hash_sha256(toHash));
+            if (!toHash) {
+                reject(new Error('invalid message'));
+            } else {
+                naclFactory.instantiate((nacl) => {
+                    // Hash public key, take first 11 bytes
+                    const hash = nacl.to_hex(nacl.crypto_hash_sha256(toHash));
 
-                resolve(hash);
-            });
+                    resolve(hash);
+                });
+            }
         });
     }
 
