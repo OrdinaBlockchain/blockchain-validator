@@ -1,38 +1,37 @@
-let BlockHeader = require('./blockheader.js');
+const BlockHeader = require('./blockheader.js');
+const Transaction = require('./transaction.js');
 
 /**
- * Block is a value object containing the list of Transactions.
+ * [Block description]
  */
 class Block {
     /**
-     * @param {*} data
+     * [constructor description]
+     * @param {json} data [description]
      */
     constructor(data) {
         this.transactions = [];
         if (data.constructorVersion === 1) {
             this.header = new BlockHeader(data);
-            this.BLOCK_REWARD = 50;
+            this.blockReward = 50;
         } else {
             this.deserialize(data);
         }
     }
 
     /**
-     * Reads the Block from a JSON file, and deserializes it back to a Block Object.
-     * @param data
+     * [deserialize description]
+     * @param {json} data [description]
      */
     deserialize(data) {
-        let currentBlock = data.block;
-        let headerData = {
+        const currentBlock = data.block;
+        this.header = new BlockHeader({
             constructorVersion: 2,
-            header: currentBlock.header
-        };
-
-        this.header = new BlockHeader(headerData);
-        this.BLOCK_REWARD = currentBlock.BLOCK_REWARD;
-
+            header: currentBlock.header,
+        });
+        this.blockReward = currentBlock.blockReward;
         for (let i = 0; i < currentBlock.transactions.length; i++) {
-            this.transactions.push(new Transaction(currentBlock.transactions[i]))
+            this.addTransaction(new Transaction(currentBlock.transactions[i]));
         }
     }
 
@@ -40,7 +39,7 @@ class Block {
      * Adds Transaction to list of block Transactions.
      * Transaction should already be checked for validity by Blockchain class,
      * since Block does not have access to all information.
-     * @param {*} transaction
+     * @param {Transaction} transaction
      */
     addTransaction(transaction) {
         // Only add new Transactions if the block is not already finished.
@@ -67,31 +66,28 @@ class Block {
 
     /**
      * Gets the balance of an address for this block.
-     * @param address
-     * @param depth
-     * @returns {number}
+     * @param {string} address
+     * @param {number} depth
+     * @return {number}
      */
     getBlockBalanceOf(address, depth) {
         let balance = 0;
         // Check coinbase Transactions
         if (this.header.coinbase === address && depth > 0) {
-            balance += this.BLOCK_REWARD;
+            balance += this.blockReward;
         }
-
+        let currentTransaction;
         for (let j = 0; j < this.transactions.length; j++) {
-            let currentTransaction = this.transactions[j];
-
+            currentTransaction = this.transactions[j];
             // Check incoming balance.
             if (currentTransaction.receiveraddress === address) {
                 balance += currentTransaction.amount;
             }
-
             // Check outgoing balance.
             if (currentTransaction.senderpubkey === address) {
                 balance -= currentTransaction.amount;
             }
         }
-
         return balance;
     }
 }
