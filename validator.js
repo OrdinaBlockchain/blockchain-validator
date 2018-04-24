@@ -6,10 +6,10 @@ const Receiver = require('./services/receiver.js');
 const Sender = require('./services/sender');
 const NodeProvider = require('./services/nodeProvider.js');
 const Messager = require('./util/messager');
+const Security = require('./logic/security');
 const opn = require('opn');
 const express = require('express');
 const http = require('http');
-const Security = require('./logic/security');
 
 let io = require('socket.io');
 
@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
 const server = http.createServer(app).listen();
 
 // Open default browser after server creation
-opn('http://localhost:' + server.address().port, (err) => {
+opn(`http://localhost:${server.address().port}`, (err) => {
     console.log(err);
 });
 
@@ -81,9 +81,6 @@ io.on('connection', (socket) => {
     });
 
     socket.on('generate-transaction-data', (data) => {
-
-
-
         messager.notify('transaction-generated', JSON.stringify({
             transaction: 'transaction',
         }));
