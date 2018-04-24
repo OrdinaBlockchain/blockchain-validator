@@ -189,7 +189,7 @@
                 <form name="chatform" id="chatform">
                     <div class="row">
                         <div class="12u$">
-                            <textarea name="chattotal" id="chattotal" placeholder="No messages yet"></textarea>
+                            <textarea name="chattotal" id="chattotal" placeholder="No messages yet" readonly></textarea>
                         </div>
                         <div class="12u"><input type="text" name="chatmessage" id="chatmessage" placeholder="Message...." /></div>
                         <div class="12u$">
@@ -276,9 +276,9 @@
             });
 
             socket.on('chatmessage', (data) => {
+                var sender = JSON.parse(data).sender;
                 var message = JSON.parse(data).message;
-                receiveMessage(message);
-
+                receiveMessage(sender, message);
             });
 
 
@@ -328,13 +328,13 @@
                 socket.emit('broadcast-chatmessage', JSON.stringify({
                     message: document.querySelector('#chatmessage').value
                 }));
-                document.querySelector('#chattotal').value += document.querySelector('#chatmessage').value + "\\\n";
+                document.querySelector('#chattotal').value = "You: " + document.querySelector('#chatmessage').value + "\n" + document.querySelector('#chattotal').value;
                 document.querySelector('#chatmessage').value = "";
             }
         }
 
-        function receiveMessage(message) {
-            document.querySelector('#chattotal').value += message + "\\\n";
+        function receiveMessage(sender, message) {
+            document.querySelector('#chattotal').value = sender + ": " + message + "\n" + document.querySelector('#chattotal').value;
         }
 
         function generateKeypair() {
