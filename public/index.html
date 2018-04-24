@@ -50,6 +50,8 @@
                     <li><a href="#chain" id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-envelope">Chain</span></a></li>
                     <li><a href="#sign-transaction" id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-envelope">Sign Transaction</span></a></li>
                     <li><a href="#logs" id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-envelope">Logs</span></a></li>
+                    <li><a href="#keygen" id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-envelope">Keygen</span></a></li>
+
 
                 </ul>
             </nav>
@@ -165,7 +167,19 @@
                 </form>
             </div>
         </section>
-
+        <section id="keygen" class="three">
+            <div class="container">
+                <header>
+                    <h2>Keygen</h2>
+                </header>
+                <button id="generatekeypair" onclick="generateKeypair()">Generate a keypair</button>
+                <div class="row">
+                    <div class="12u$">
+                        <textarea name="keypair" id="keypair" class="form textarea"></textarea>
+                    </div>
+                </div>
+            </div>
+        </section>
         <section id="logs" class="three">
             <div class="container">
 
@@ -175,7 +189,7 @@
                 <p>Access the logs below</p>
                 <div class="row">
                     <div class="12u$">
-                        <textarea name="logs" id="logs"></textarea>
+                        <textarea name="logs" id="logs" class="form textarea"></textarea>
                     </div>
                 </div>
             </div>
@@ -208,11 +222,8 @@
         socket.on('connect', () => {
             console.log("connected");
             socket.on('disconnect', () => {
-                document.getElementById('server-status').innerText = 'Offline';
                 document.getElementById('node-id').innerText = '-';
-                document.getElementById('node-port').innerText = '-';
-                document.getElementById('node-isbackup').innerText = '-';
-                document.getElementById('node-status').innerText = '-';
+                document.getElementById('node-status').innerText = 'Disconnected';
             });
 
             socket.on('node-initialized', (data) => {
@@ -224,7 +235,7 @@
             });
 
             socket.on('logging', (data) => {
-                document.getElementById('logging-container').innerHTML += data.toString('utf8') + '<br>';
+                document.getElementById('logs').innerHTML += data.toString('utf8') + '<br>';
             })
 
             socket.on('node-connected', (data) => {
@@ -233,6 +244,10 @@
 
             socket.on('node-disconnected', (data) => {
                 document.getElementById('node-status').innerText = 'Disconnected';
+            });
+
+            socket.on('keypair', (data) => {
+                document.getElementById('keypair').innerText = data.pubkey + ", " + data.privkey;
             });
 
 
@@ -275,6 +290,10 @@
                 }));
             }
         });
+
+        function generateKeypair() {
+            socket.emit('generate-keypair');
+        }
     </script>
 
 </body>
