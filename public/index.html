@@ -276,7 +276,9 @@
             });
 
             socket.on('chatmessage', (data) => {
-                receiveMessage(data.message);
+                var message = JSON.parse(data).message;
+                receiveMessage(message);
+
             });
 
 
