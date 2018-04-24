@@ -20,7 +20,7 @@ class Blockchain {
             constructorVersion: 1,
             coinbase: this.coinbase,
             parentHash: this.getLatestBlock().header.blockHash,
-            version: this.version
+            version: this.version,
         };
 
         this.currentBlock = new Block(data);
@@ -34,10 +34,10 @@ class Blockchain {
         for (let i = 0; i < storedChain.blocks.length; i++) {
             let data = {
                 constructorVersion: 2,
-                block: storedChain.blocks[i]
+                block: storedChain.blocks[i],
             };
             let newBlock = new Block(data);
-            this.blocks.push(newBlock)
+            this.blocks.push(newBlock);
         }
     }
 
@@ -57,7 +57,7 @@ class Blockchain {
                 constructorVersion: 1,
                 coinbase: this.coinbase,
                 version: this.version,
-                parentHash: this.getLatestBlock().header.blockHash
+                parentHash: this.getLatestBlock().header.blockHash,
             };
 
             this.currentBlock = new Block(data);
@@ -72,8 +72,10 @@ class Blockchain {
     isValidTransaction(transaction) {
         // TODO check if address is a correct addressb
         if (this.validateTransactionFormat(transaction) && transaction.verifySignature()) {
-            return this.getBalanceOf(transaction._senderpubkey) >= transaction._amount;
+        // if (this.validateTransactionFormat(transaction)) {
+            return this.getBalanceOf(transaction.senderpubkey) >= transaction.amount;
         }
+
         return false;
     }
 
@@ -109,14 +111,14 @@ class Blockchain {
 
             // Chain is not valid if the currentBlock.parentHash !== blockHash of the previous block.
             if (currentBlock.header.parentHash !== parentHash) {
-                console.log("1");
+                console.log('1');
                 return false;
             }
             parentHash = currentBlock.header.blockHash;
 
             // Chain is not valid if >0 blocks are invalid.
             if (!this.isValidBlock(currentBlock)) {
-                console.log("2");
+                console.log('2');
                 return false;
             }
         }

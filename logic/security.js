@@ -1,60 +1,61 @@
 const bip39 = require('bip39');
 const naclFactory = require('js-nacl');
+const util = require('util');
+
+// For debugging (true = debug-mode, false=no debug)
 const verbose = true;
 
 /**
- *
+ * [Security description]
  */
 class Security {
     /**
-     *
+     * [sign description]
+     * @param  {[json]} message    [description]
+     * @param  {[string]} privateKey [description]
+     * @return {[Promise]}            [description]
      */
-    constructor() { }
+    static sign(message, privateKey) {
+        return new Promise((resolve, reject) => {
+            naclFactory.instantiate((nacl) => {
+                // Convert message to bytestring
+                const messagBytes = this.messageToBytes(message);
 
-    /**
-     *
-     * @param {*} message
-     * @param {*} privKey
-     * @return {*}
-     */
-    static sign(message, privKey) {
-        let signatureBin;
-        let signPrivKey = this.hexStringToByteArray(privKey);
+                // Sign message and package up into packet
+                const signatureBin = nacl.crypto_sign(messagBytes, this.hexToBytes(privateKey));
+                this.debug(`Signature: ${nacl.to_hex(signatureBin)}`);
 
-        naclFactory.instantiate((nacl) => {
-            // Convert message to bytestring
-            const msgBytes = this.messageToBytes(message);
-
-            // Sign message and package up into packet
-            signatureBin = nacl.crypto_sign(msgBytes, signPrivKey);
-            this.debug('Signature:           ' + nacl.to_hex(signatureBin));
+                resolve(signatureBin);
+            });
         });
-
-        return signatureBin;
     }
 
     /**
-     *
-     * @param {string} message
-     * @param {string} privKey
-     * @return {string} signature
+     * [signDetached description]
+     * @param  {[json]} message    [description]
+     * @param  {[string]} privateKey [description]
+     * @return {[Promise]}            [description]
      */
-    static signDetached(message, privKey) {
-        let signatureDetached;
-        let signPrivKey = this.hexStringToByteArray(privKey);
+    static signDetached(message, privateKey) {
+        return new Promise((resolve, reject) => {
+            naclFactory.instantiate((nacl) => {
+                try {
+                    const data = this.createData(message);
 
-        naclFactory.instantiate((nacl) => {
-            // Convert message to bytestring
-            const msgBytes = this.messageToBytes(message);
+                    // Convert message to bytestring
+                    const messageBytes = this.messageToBytes(JSON.stringify(data));
 
-            // Sign message and package up into packet
-            let signatureDetachedBin = nacl.crypto_sign_detached(msgBytes, signPrivKey);
-            signatureDetached = nacl.to_hex(signatureDetachedBin);
+                    // Sign message and package up into packet
+                    const detachedSignatureBin = nacl.crypto_sign_detached(messageBytes, this.hexToBytes(privateKey));
+                    const detachedSignature = nacl.to_hex(detachedSignatureBin);
+                    this.debug(`Signature: ${detachedSignature}`);
 
-            this.debug('Signature:           ' + signatureDetached);
+                    resolve(detachedSignature);
+                } catch (err) {
+                    reject(err);
+                }
+            });
         });
-
-        return signatureDetached;
     }
 
     /**
@@ -74,7 +75,7 @@ class Security {
      */
     static verify(signatureBin, pubKey) {
         let message = '';
-        let signPubKey = this.hexStringToByteArray(pubKey);
+        let signPubKey = this.hexToBytes(pubKey);
 
         naclFactory.instantiate((nacl) => {
             // Decode message from packet with public key
@@ -98,12 +99,20 @@ class Security {
      */
     static verifyDetached(message, signature, pubKey) {
         let result;
-        let signPubKey = this.hexStringToByteArray(pubKey);
-        let signatureBin = this.hexStringToByteArray(signature);
+        let signPubKey = this.hexToBytes(pubKey);
+        let signatureBin = this.hexToBytes(signature);
+
+        // extract data from message without the signature.
+        let data = {
+            senderpubkey: message.senderpubkey,
+            receiveraddress: message.receiveraddress,
+            amount: message.amount,
+            timestamp: message.timestamp,
+        };
 
         naclFactory.instantiate((nacl) => {
             // Convert message to bytestring
-            const msgBytes = this.messageToBytes(message);
+            const msgBytes = this.messageToBytes(JSON.stringify(data));
 
             // Decode message from packet with public key
             result = nacl.crypto_sign_verify_detached(signatureBin, msgBytes, signPubKey);
@@ -151,7 +160,7 @@ class Security {
      * @return {string} address
      */
     static generateAddress(pubKey) {
-        let signPubKey = this.hexStringToByteArray(pubKey);
+        let signPubKey = this.hexToBytes(pubKey);
         let address;
 
         naclFactory.instantiate((nacl) => {
@@ -167,21 +176,20 @@ class Security {
     }
 
     /**
-     *
-     * @param {string} hexString
-     * @return {*} array
+     * [hexToBytes description]
+     * @param  {[string]} hex [description]
+     * @return {[array]} byteArray    [description]
      */
-    static hexStringToByteArray(hexString) {
-        if (!hexString) {
+    static hexToBytes(hex) {
+        if (!hex) {
             return new Uint8Array(); // eslint-disable-line no-undef
+        } else {
+            let bytes = [];
+            for (let i = 0, len = hex.length; i < len; i += 2) {
+                bytes.push(parseInt(hex.substr(i, 2), 16));
+            }
+            return new Uint8Array(bytes); // eslint-disable-line no-undef
         }
-
-        let a = [];
-        for (let i = 0, len = hexString.length; i < len; i+=2) {
-            a.push(parseInt(hexString.substr(i, 2), 16));
-        }
-
-        return new Uint8Array(a); // eslint-disable-line no-undef
     }
 
     /**
@@ -208,6 +216,25 @@ class Security {
         });
 
         return hash;
+    }
+
+    /**
+     * [createData description]
+     * @param  {[type]} message [description]
+     * @return {[type]}         [description]
+     */
+    static createData(message) {
+        if (message.senderpubkey && message.receiveraddress &&
+            message.amount && message.timestamp) {
+            return {
+                senderpubkey: message.senderpubkey,
+                receiveraddress: message.receiveraddress,
+                amount: message.amount,
+                timestamp: message.timestamp,
+            };
+        } else {
+            throw new Error('invalid message');
+        }
     }
 }
 
