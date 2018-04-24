@@ -13,7 +13,7 @@ class Block {
         this.transactions = [];
         if (data.constructorVersion === 1) {
             this.header = new BlockHeader(data);
-            this.blockReward = 50;
+            this.BLOCK_REWARD = 50;
         } else {
             this.deserialize(data);
         }
@@ -29,7 +29,7 @@ class Block {
             constructorVersion: 2,
             header: currentBlock.header,
         });
-        this.blockReward = currentBlock.blockReward;
+        this.BLOCK_REWARD = currentBlock.BLOCK_REWARD;
         for (let i = 0; i < currentBlock.transactions.length; i++) {
             this.addTransaction(new Transaction(currentBlock.transactions[i]));
         }
@@ -87,7 +87,7 @@ class Block {
         let balance = 0;
         // Check coinbase Transactions
         if (this.header.coinbase === address && depth > 0) {
-            balance += this.blockReward;
+            balance += this.BLOCK_REWARD;
         }
         let currentTransaction;
         for (let j = 0; j < this.transactions.length; j++) {

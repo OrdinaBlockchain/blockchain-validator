@@ -2,7 +2,7 @@ const bip39 = require('bip39');
 const naclFactory = require('js-nacl');
 
 // For debugging (true = debug-mode, false=no debug)
-const verbose = true;
+const verbose = false;
 
 /**
  * [Security description]
