@@ -42,14 +42,13 @@ io = io.listen(server);
 io.on('connection', (socket) => {
     // Initialize logger for real-time webpage logging
     messager = new Messager(socket);
-    if (connected) {
-        messager.notify('node-initialized', JSON.stringify({
-            id: node.id,
-            port: PORT,
-            isBackup: process.env.IS_BACKUP,
-        }));
-        messager.notify('node-connected');
-    } else {
+    initNode();
+    socket.emit('node-initialized', JSON.stringify({
+        id: node.id,
+        port: PORT,
+        isBackup: process.env.IS_BACKUP,
+    }));
+    socket.on('node-data', (data) => {
         initNode();
         messager.notify('node-initialized', JSON.stringify({
             id: node.id,
@@ -95,7 +94,6 @@ io.on('connection', (socket) => {
         }));
     });
 });
-
 /** */
 function initNode() {
     node = new NodeProvider().createNode();
