@@ -1,7 +1,7 @@
 let level = require('level');
 const verbose = true;
 
-const databasePath = './myDB';
+const databasePath = '../database';
 
 
 let db;
@@ -35,15 +35,19 @@ class Database {
     }
 
     /**
-     *
+     * returns a promise
      * @param {*} key
      * @return {*} value
      */
     static get(key) {
-        db.get(key, function(err, value) {
-            if (err && verbose) return console.log(key + ' has no matches');
-            if (value) return value;
+        return new Promise((resolve, reject) => {
+            db.get(key, function(err, value) {
+                if (err && verbose) return console.log(key + ' has no matches');
+                if (value) resolve(value);
+            });
         });
+
+
     }
 
     /**
