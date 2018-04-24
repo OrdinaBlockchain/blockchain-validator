@@ -42,13 +42,10 @@ class Block {
      * @param {Transaction} transaction
      */
     addTransaction(transaction) {
-        return new Promise((resolve, reject) => {
-            // Only add new Transactions if the block is not already finished.
-            if (this.header.blockHash === '0' || this.header.blockHash === null) {
-                this.transactions.push(transaction);
-            }
-            resolve();
-        });
+        // Only add new Transactions if the block is not already finished.
+        if (this.header.blockHash === '0' || this.header.blockHash === null) {
+            this.transactions.push(transaction);
+        }
     }
 
     /**

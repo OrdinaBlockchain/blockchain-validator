@@ -49,14 +49,9 @@ class Blockchain {
         return new Promise((resolve, reject) => {
             this.isValidTransaction(transaction).then((isValid) => {
                 if (isValid) {
-                    this.currentBlock.addTransaction(transaction).then(() => {
-                        return this.limitLength();
-                    }).then(() => {
-                        resolve();
-                    });
-                } else {
-                    return this.limitLength();
+                    this.currentBlock.addTransaction(transaction);
                 }
+                return this.limitLength();
             }).then(() => {
                 resolve();
             }).catch((err) => {
